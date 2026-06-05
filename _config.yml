@@ -1,0 +1,33 @@
+title: "Ignis — Finding Your Mojo from DwarfStar"
+description: "Field notes from building Ignis: a Mojo-native agent harness that runs a MAX-served LLM in the same OS process as the control plane."
+url: "https://abdulmuneer.github.io"
+baseurl: ""
+
+theme: just-the-docs
+
+plugins:
+  - jekyll-relative-links
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# jekyll-relative-links: rewrites [text](./other-part.md) links to the built page URL
+relative_links:
+  enabled: true
+  collections: false
+
+# Just the Docs options
+search_enabled: true
+heading_anchors: true
+color_scheme: light
+aux_links:
+  "View source on GitHub":
+    - "https://github.com/abdulmuneer/abdulmuneer.github.io"
+aux_links_new_tab: true
+
+# Files that are not site content
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - README.md
+  - .github
