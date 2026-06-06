@@ -17,6 +17,75 @@ When Mojo was announced in May 2023, a lot of Python programmers read the pitch 
 
 The 1.0 beta is a different animal from that 2023 sketch. The right way to understand it is **not** "Python but fast." It's a Python-*family* systems language: static types, value ownership, traits, generics, compile-time parameterization, GPU/kernel authoring — with Python interop as a bridge, not a foundation. Judged as a drop-in Python replacement it loses on ecosystem size. Judged as a compiled control-plane language sitting close to a model runtime, it's a genuinely credible choice today. Ignis is the second test, and that framing matters for everything below.
 
+### New to Mojo? A five-minute primer
+
+*If you already write Mojo, skip to [Why Python is in the loop at all](#why-python-is-in-the-loop-at-all). This section is for getting an absolute newcomer oriented enough to read the rest.*
+
+**Where it comes from.** Mojo is from [Modular](https://www.modular.com/), the company Chris Lattner founded (he created LLVM, Clang, Swift, and MLIR). It's built on **MLIR** and compiles *ahead of time* to native code — so unlike CPython there's no interpreter in the running program. The pitch is one language that spans high-level application logic *and* low-level, GPU-class kernels.
+
+**It looks like Python, but it's statically typed and compiled.** A program has an entry point and prints like you'd expect:
+
+```mojo
+def main():
+    var name = "world"          # `var` declares a variable
+    print("hello,", name)
+```
+
+You build it with `mojo build hello.mojo -o hello` and run `./hello`. (There's also `mojo run`, but — see [Part 1](./01-what-ignis-is.md) — anything that brings up MAX must be *built* first.)
+
+**Functions: `def` only.** In the 1.0 beta, `fn` was removed and **`def` is the sole function keyword** — but it now carries strict, typed semantics (the strictness `fn` used to provide). Type annotations are real and checked.
+
+**Structs with value semantics.** You model data as `struct`s, and you opt into copy/move behavior explicitly:
+
+```mojo
+struct Order(Copyable, Movable):
+    var id: String
+    var total: Float64
+```
+
+**Ownership is the headline feature.** Every value has one owner; the compiler tracks it. Argument conventions say how a function touches its argument — `read` (borrow, the default), `mut` (mutable borrow), `var`/`out` (it takes ownership) — and `^` *transfers* ownership:
+
+```mojo
+def __init__(out self, var outputs: List[String]):
+    self.outputs = outputs^      # take ownership of `outputs`, no copy
+```
+
+This is why you'll see `.copy()` and `^` dotted through real Mojo: collections like `List` aren't implicitly copyable, so every additional owner is spelled out. It's more typing than Python — and it's what makes the code allocation-honest.
+
+**Traits and generics** are how you write reusable, statically-dispatched code. A `trait` is a compile-time contract; a `struct` satisfies it by implementing its methods; a function can be generic over anything that conforms:
+
+```mojo
+trait Greeter:
+    def greet(self) -> String: ...
+
+struct Formal(Greeter):
+    def greet(self) -> String:
+        return "Good day."
+
+def announce[G: Greeter](g: G):   # [G: Greeter] is a compile-time type parameter
+    print(g.greet())
+```
+
+That `[...]` bracket is **compile-time parameterization** — it can carry types (`[G: Greeter]`) or values (`[n: Int]`), and the compiler specializes a fresh, fast version per instantiation, with no runtime dispatch. This single feature is the spine of Ignis: `process_turn[E: Engine]` is generic over the model backend, so the live model and the no-model test double run the exact same control-plane code.
+
+**Numbers are SIMD-first.** Mojo's scalar types are really vectors of width one (`SIMD[DType.float32, 4]` is four floats in a register), which is what lets the same language express GPU/CPU kernels — the territory of [Part 4](./04-max-the-platform.md)'s custom ops.
+
+**Python is one import away.** When a battery is missing, Mojo embeds CPython and calls it:
+
+```mojo
+from std.python import Python
+
+def use_numpy() raises:
+    var np = Python.import_module("numpy")
+    print(np.array([1, 2, 3]).sum())   # real CPython, in this same process
+```
+
+That escape hatch is the entire model path in Ignis — and, as the rest of this part argues, both its superpower and its catch.
+
+**Getting it.** The toolchain ships as the `modular` package (it bundles the `mojo` compiler *and* MAX). Two common ways in: `pixi`/`magic` (Modular's conda-based project manager) or a plain `uv venv` + `uv pip install modular …` from Modular's nightly index. Either gives you `mojo build` and the `max` Python library in one go.
+
+That's enough to read on. The rest of this part is what living in it for a real project taught me.
+
 ### Why Python is in the loop at all
 
 A fair question lands immediately: if MAX is Modular's Mojo-first runtime and Ignis is Mojo, where does Python enter? It enters **at the API you call.** The kernels, the graph compiler, and on-device execution are compiled, and Mojo is the language they're written in. But the developer-facing surface — load a model, build a request, run `generate` — ships as a Python library, `max.pipelines`. There is no Mojo-native call that loads Qwen3-8B and generates from it. So Ignis takes the only door available and embeds CPython.
@@ -89,8 +158,6 @@ For what I built — a compiled, deterministic control plane running in-process 
 For the original goal — a drop-in replacement for a batteries-included Python application — it is not ready, and there's no use pretending otherwise. No stdlib JSON, a young service ecosystem, and the constant pull toward interop the moment you leave the happy path. The ecosystem is three years old; that's the explanation, not a design flaw.
 
 What would help, roughly in the order it cost me: a standard-library JSON module; a serializer that compiles on a stable release; a documented, supported in-process MAX-from-Mojo API (so the integration traps become the platform's problem, not folklore); and a stable channel that doesn't ship dev-build surprises. **None of these are research. They are maturation.** I went back to Mojo to find out whether it had become *Python but fast*. It hasn't — and after Ignis I think that was the wrong test. The framing that fits is the one in [Part 4](./04-max-the-platform.md): a compiled control plane sharing one runtime with the model, where the value is proximity.
-
----
 
 ---
 

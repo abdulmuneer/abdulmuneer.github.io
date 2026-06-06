@@ -11,6 +11,8 @@ Less "release notes," more "what I found going into the innards of Mojo and MAX.
 
 Use the sidebar to navigate, or start at the top:
 
+**New to Mojo or MAX?** Parts 3 and 4 each open with a from-scratch, five-minute primer — enough to onboard someone who has never touched either before diving into the assessment. If you already know the tools, skip those intros and go straight to the details; the rest of the series doesn't repeat them.
+
 ## The series
 
 - [Part 0 — The Curiosity and the Plan](./00-curiosity-and-the-plan.md) — the trailhead: what made me curious about Mojo and MAX, the `ds4` spark, the in-process bet, and the M0→M5 plan I set out with.

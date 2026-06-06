@@ -22,6 +22,44 @@ MAX is unusual in bundling several layers that other vendors ship as separate pr
 
 That bundling is the key to understanding both its competitors and its character.
 
+### New to MAX? A five-minute primer
+
+*If you've already served a model with MAX, skip to [Is there a MAX from NVIDIA?](#is-there-a-max-from-nvidia). This section gets a newcomer oriented.*
+
+**What it's for.** MAX (Modular's inference platform) takes a model — typically a Hugging Face checkpoint like `Qwen/Qwen3-8B` — compiles its computation graph to optimized kernels, and runs or serves it *fast*, on CPU or NVIDIA or AMD GPUs from the same stack. Think "the engine that an LLM endpoint runs on," in the same family as vLLM or TensorRT-LLM, but portable across vendors and with Mojo as its kernel language.
+
+**A few terms, plainly.** A model turns text into **tokens** (sub-word chunks) and generates one token at a time. Each step attends over all previous tokens; to avoid recomputing that, the engine stores per-token key/value vectors in a **KV cache**. **Prefix caching** reuses the KV for a shared prefix across requests — so in a multi-turn chat, the unchanged history isn't re-processed every turn. **Paged attention** is the memory scheme (à la vLLM's PagedAttention) that makes that cache efficient. These aren't trivia: for an agent that re-sends a growing conversation every turn, prefix-cache reuse is most of the performance story, and it's the number [Part 2](./02-what-was-achieved.md) measures.
+
+**The simplest way to use it — serve an OpenAI endpoint.** This is the path Modular leads with and most people start on:
+
+```bash
+pip install modular          # or: pixi add max
+max serve --model-path Qwen/Qwen3-8B
+# now you have an OpenAI-compatible server on localhost:8000:
+curl localhost:8000/v1/chat/completions -d '{
+  "model": "Qwen/Qwen3-8B",
+  "messages": [{"role": "user", "content": "hello"}]
+}'
+```
+
+Because the API is OpenAI-shaped, your existing client code (the `openai` SDK, LangChain, whatever) points at it unchanged. The model runs in *its own process*; you talk to it over HTTP.
+
+**The way Ignis uses it — in-process Python.** Under the server is a Python library, `max.pipelines`. You can load and drive a model directly, no HTTP, no separate process:
+
+```python
+from max.pipelines import PIPELINE_REGISTRY, PipelineConfig
+# (the real PipelineConfig is more nested — model path, quantization, device)
+tokenizer, pipeline = PIPELINE_REGISTRY.retrieve(PipelineConfig(...))
+async for output in pipeline.generate_async(request):
+    ...   # output.tokens, and output.num_cached_tokens — the real cache count
+```
+
+This is the seam Ignis crosses from Mojo via `std.python`. It's "more in-process" than `max serve` (the model runs inline in the calling thread), which is what lets the harness read MAX's real `num_cached_tokens` and keep the model's exact tool-call bytes without a REST round-trip.
+
+**The deeper layers** are where this part is headed. **MAX Graph** is the symbolic-graph + compiler layer; **Mojo custom ops** (`@compiler.register` / `ops.custom`) let you drop your own compiled kernel into that graph; and the sampler exposes hooks (`SamplingParams.logits_processors`) and production **constrained decoding** (an llguidance grammar engine). Those four are exactly the ingredients for the climax below — and `Qwen3` here is a "thinking" model, so it emits a `<think>…</think>` preamble the harness strips, a small wrinkle worth knowing before you read live output.
+
+**Mojo, the kernel language.** The orchestration surface above (`max.pipelines`, `max serve`) is Python — but the kernels *under* it are written in Mojo, and custom ops are how you author new ones. That split (Python to drive, Mojo to compute) is the single most important thing to hold onto, and the rest of the series turns on it.
+
 ### Is there a MAX from NVIDIA?
 
 A colleague, watching me wire Mojo into the in-process pipeline, asked the obvious question: isn't there already an equivalent from NVIDIA, or anyone? The answer depends on *which layer* you mean — no single product covers all four.
@@ -141,8 +179,6 @@ A separate process, 1152 tokens of the restored conversation served from disk, t
 As an in-process runtime, MAX is further along than its Python-first positioning suggests, and that's the headline: **compiled Mojo can already reach into the model's compute today** — a custom op runs as a node in the graph, on the live logits, in the decode loop. The obstacle was never that two compiled worlds can't meet. What remains is narrower and specific: **the orchestration API is Python.** There's no Mojo-native way to load Qwen3 and drive `generate`, so the loop runs from CPython even while a Mojo kernel works inside it. A documented, supported in-process MAX-from-Mojo API would remove the integration traps and the last layer of CPython at once.
 
 The other thing to credit honestly: MAX's instinct to ship the hard inference primitives (paged KV, prefix caching, logits hooks, llguidance grammar, tiered offload) means a harness author should *reach for them first* and reserve Mojo for the bespoke edges and the conversation-level state MAX leaves open. That's not a limitation of MAX — it's the correct division of labor, and finding it was half the value of the expedition.
-
----
 
 ---
 
