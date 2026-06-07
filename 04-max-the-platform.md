@@ -10,9 +10,9 @@ sidebar:
 
 *Part 4 of the Ignis expedition. The deep one. What MAX is and where it sits among NVIDIA's stack and the open-source engines; my assessment of it as an in-process runtime; and the technical climax — compiling Ignis's refund policy into the decoder two ways, which is where "is Mojo a peer in the graph or just a wrapper?" finally gets answered.*
 
-<p><span style="display:inline-block;background:#6D28D9;border-radius:10px;padding:8px;vertical-align:middle"><img src="/assets/images/brand/max-flash.svg" alt="MAX" width="22" style="display:block"></span> <strong style="font-size:1.7em;vertical-align:middle;margin-left:8px">MAX</strong></p>
+<p style="text-align:center"><img class="brand-logo" src="/assets/images/brand/max-stack.svg" alt="The MAX stack" style="width:780px;max-width:100%"></p>
 
-*MAX and Modular are trademarks of Modular Inc.; logo shown here for identification.*
+*MAX and the MAX stack graphic are trademarks/assets of Modular Inc.; shown here for identification.*
 
 
 
@@ -64,6 +64,15 @@ This is the seam Ignis crosses from Mojo via `std.python`. It's "more in-process
 **The deeper layers** are where this part is headed. **MAX Graph** is the symbolic-graph + compiler layer; **Mojo custom ops** (`@compiler.register` / `ops.custom`) let you drop your own compiled kernel into that graph; and the sampler exposes hooks (`SamplingParams.logits_processors`) and production **constrained decoding** (an llguidance grammar engine). Those four are exactly the ingredients for the climax below — and `Qwen3` here is a "thinking" model, so it emits a `<think>…</think>` preamble the harness strips, a small wrinkle worth knowing before you read live output.
 
 **Mojo, the kernel language.** The orchestration surface above (`max.pipelines`, `max serve`) is Python — but the kernels *under* it are written in Mojo, and custom ops are how you author new ones. That split (Python to drive, Mojo to compute) is the single most important thing to hold onto, and the rest of the series turns on it.
+
+**What the official docs claim (and why it matters here).** Modular describes [MAX](https://docs.modular.com/max/intro/) as a *high-performance AI serving framework* that exposes an OpenAI-compatible endpoint and runs native MAX and PyTorch models across GPUs and CPUs — explicitly **"no CUDA required"** and free of vendor lock-in. Out of the box it advertises:
+
+- an OpenAI-compatible REST API serving **500+ Hugging Face models**;
+- graph-compiler optimizations, **quantization**, continuous **batching**, **prefix caching**, and **speculative decoding**;
+- **function calling** and **structured output** — the very feature Ignis rides for the airtight grammar gate in the climax below;
+- **LoRA adapters**, and custom kernels authored in **Mojo**.
+
+You install it with `pip install modular` (the `max` CLI) or run a sub-1 GB Docker container. The thing to notice: nearly every bullet there is a primitive [Part 2](./02-what-was-achieved.md) found *already built* — which is precisely why the harness's job turned out to be **binding** these together, not reimplementing them.
 
 ## Is there a MAX from NVIDIA?
 

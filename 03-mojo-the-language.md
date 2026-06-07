@@ -89,6 +89,15 @@ That escape hatch is the entire model path in Ignis — and, as the rest of this
 
 **Getting it.** The toolchain ships as the `modular` package (it bundles the `mojo` compiler *and* MAX). Two common ways in: `pixi`/`magic` (Modular's conda-based project manager) or a plain `uv venv` + `uv pip install modular …` from Modular's nightly index. Either gives you `mojo build` and the `max` Python library in one go.
 
+**What the official manual emphasizes.** Modular's own [Mojo manual](https://mojolang.org/docs/manual/) frames the language around writing *high-performance code for CPUs and GPUs*, and it organizes that around a few pillars worth knowing by name:
+
+- **Systems programming** — pointers, explicit memory management, and the value-ownership model above.
+- **Metaprogramming** — compile-time evaluation, parameterization, generics, and traits (the `[...]` machinery), so abstractions can cost nothing at runtime.
+- **Hardware portability** — one language targeting CPU *and* GPU.
+- **Python interoperability** — call Python from Mojo *and* Mojo from Python, so adoption is incremental rather than all-or-nothing.
+
+Note the framing: the docs position Mojo as *complementary to Python through interop*, not as a drop-in superset — which squares exactly with what Ignis ran into below.
+
 That's enough to read on. The rest of this part is what living in it for a real project taught me.
 
 ## Why Python is in the loop at all
