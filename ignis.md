@@ -1,7 +1,6 @@
 ---
 title: "Ignis — Finding Your Mojo from DwarfStar"
 permalink: /ignis.html
-excerpt: "A six-part expedition into a Mojo-native, in-process MAX agent harness."
 header:
   overlay_image: /assets/images/hero-ember.svg
   overlay_filter: 0.5
