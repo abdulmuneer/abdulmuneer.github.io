@@ -8,7 +8,6 @@ header:
   actions:
     - label: "Read the Ignis series"
       url: /ignis.html
-excerpt: "I build things and write up what they teach me."
 feature_row:
   - image_path: /assets/images/hero-mojo.svg
     alt: "Ignis — Finding Your Mojo from DwarfStar"
