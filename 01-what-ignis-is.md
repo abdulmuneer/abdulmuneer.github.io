@@ -1,6 +1,7 @@
 ---
 title: "Part 1 — What It Is, and How to Run It"
-nav_order: 2
+parent: "Ignis — Finding Your Mojo from DwarfStar"
+nav_order: 1
 ---
 
 # Ignis — Finding Your Mojo from DwarfStar
@@ -201,4 +202,4 @@ The compiled CLI is `./ignis <command> [event-log-path]`, where command is `reta
 
 ---
 
-*Previous: [The Curiosity and the Plan](./00-curiosity-and-the-plan.md). Next: [What Ignis Achieved](./02-what-was-achieved.md). [Series index](./index.md).*
+*Previous: [The Curiosity and the Plan](./00-curiosity-and-the-plan.md). Next: [What Ignis Achieved](./02-what-was-achieved.md). [Series index](./ignis.md).*

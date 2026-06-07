@@ -1,6 +1,7 @@
 ---
 title: "Part 5 — My Journey, and a Thank-You"
-nav_order: 6
+parent: "Ignis — Finding Your Mojo from DwarfStar"
+nav_order: 5
 ---
 
 # Ignis — Finding Your Mojo from DwarfStar
@@ -49,4 +50,4 @@ The things I'd ask for — stdlib JSON, a serializer that compiles on a stable c
 
 ---
 
-*Previous: [MAX, the Platform](./04-max-the-platform.md). Back to the start: [The Curiosity and the Plan](./00-curiosity-and-the-plan.md). [Series index](./index.md).*
+*Previous: [MAX, the Platform](./04-max-the-platform.md). Back to the start: [The Curiosity and the Plan](./00-curiosity-and-the-plan.md). [Series index](./ignis.md).*

@@ -1,6 +1,7 @@
 ---
 title: "Part 2 — What Was Achieved"
-nav_order: 3
+parent: "Ignis — Finding Your Mojo from DwarfStar"
+nav_order: 2
 ---
 
 # Ignis — Finding Your Mojo from DwarfStar
@@ -83,4 +84,4 @@ Read against that column, the result is narrow but solid: a compiled, determinis
 
 ---
 
-*Previous: [What Ignis Is](./01-what-ignis-is.md). Next: [Mojo, the Language](./03-mojo-the-language.md). [Series index](./index.md).*
+*Previous: [What Ignis Is](./01-what-ignis-is.md). Next: [Mojo, the Language](./03-mojo-the-language.md). [Series index](./ignis.md).*

@@ -1,6 +1,7 @@
 ---
 title: "Part 0 — The Curiosity and the Plan"
-nav_order: 1
+parent: "Ignis — Finding Your Mojo from DwarfStar"
+nav_order: 0
 ---
 
 # Ignis — Finding Your Mojo from DwarfStar
@@ -61,10 +62,10 @@ If you want the verdict before the journey, it's [Part 5](./05-the-journey.md) �
 
 ---
 
-*Next: What Ignis Is — the artifact, and how to run it. [Series index](./index.md).*
+*Next: What Ignis Is — the artifact, and how to run it. [Series index](./ignis.md).*
 
 ---
 
 ---
 
-*Next: [What Ignis Is](./01-what-ignis-is.md). [Series index](./index.md).*
+*Next: [What Ignis Is](./01-what-ignis-is.md). [Series index](./ignis.md).*

@@ -1,6 +1,7 @@
 ---
 title: "Part 3 — Mojo, the Language"
-nav_order: 4
+parent: "Ignis — Finding Your Mojo from DwarfStar"
+nav_order: 3
 ---
 
 # Ignis — Finding Your Mojo from DwarfStar
@@ -161,4 +162,4 @@ What would help, roughly in the order it cost me: a standard-library JSON module
 
 ---
 
-*Previous: [What Ignis Achieved](./02-what-was-achieved.md). Next: [MAX, the Platform](./04-max-the-platform.md). [Series index](./index.md).*
+*Previous: [What Ignis Achieved](./02-what-was-achieved.md). Next: [MAX, the Platform](./04-max-the-platform.md). [Series index](./ignis.md).*

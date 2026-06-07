@@ -1,6 +1,7 @@
 ---
 title: "Part 4 — MAX, the Platform"
-nav_order: 5
+parent: "Ignis — Finding Your Mojo from DwarfStar"
+nav_order: 4
 ---
 
 # Ignis — Finding Your Mojo from DwarfStar
@@ -182,4 +183,4 @@ The other thing to credit honestly: MAX's instinct to ship the hard inference pr
 
 ---
 
-*Previous: [Mojo, the Language](./03-mojo-the-language.md). Next: [My Journey](./05-the-journey.md). [Series index](./index.md).*
+*Previous: [Mojo, the Language](./03-mojo-the-language.md). Next: [My Journey](./05-the-journey.md). [Series index](./ignis.md).*
