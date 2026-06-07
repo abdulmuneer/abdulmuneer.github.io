@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "jekyll", "~> 4.3"
+gem "jekyll", "~> 4.3.0"   # 4.4.x has a page-excerpt regression (yaml_file? NoMethodError)
 gem "minimal-mistakes-jekyll"
 
 group :jekyll_plugins do
