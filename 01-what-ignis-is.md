@@ -160,15 +160,15 @@ def execute_tool(name: String, order_id: String) -> String:
 
 ## Examples included
 
-Each lives under `examples/` with its own README; the first two are full end-to-end scenarios, the rest are focused extension demos:
+Each lives under `examples/` with its own README; the first four are agent scenarios, the rest are focused extension demos. Each opens with what the agent is *designed to do*, then what it demonstrates:
 
-- **`retail_recovery`** — the complete vertical slice: real Qwen tool selection, parser-owned execution, the money-impacting refund gate, append-only artifacts. The canonical "what a turn looks like."
-- **`coding_agent`** — a real in-process coding agent that `read_file`/`write_file`s a Python workspace and runs its tests until they pass — same harness, same `Engine`/`ToolCodec`/timeline, real cache metrics.
-- **`banking_agent`** — extends the policy to bind confirmation to **two fields** (`from_account:amount`): confirming a 100 USD transfer can't approve a 999 USD one. Adds two eval scenarios.
-- **`rag_search`** — a read-only `search_docs(query)` tool that delegates to a Python companion via `std.python`; the pattern for tools that need no gate and no harness change. Swap its body for real embeddings and it becomes semantic search.
-- **`custom_backend`** — `RemoteBackend` implements `Engine` against any OpenAI-compatible endpoint (max serve, Ollama, OpenAI). Trade-off stated honestly: `cached_tokens` is always 0, because the REST boundary hides `num_cached_tokens` — in-process is the only path to real cache telemetry.
-- **`graph_policy_gate`** — the Mojo custom op (`gated_logits`) compiled into a MAX graph and run inside a live Qwen3's sampler. The constrained-decoding frontier, in miniature.
-- **`grammar_policy_gate`** — the airtight version riding MAX's own llguidance grammar engine (GPU-only). Together with `graph_policy_gate` it maps the same policy onto two enforcement layers.
+- **`retail_recovery`** — A retail customer-support agent that answers order-status questions and issues refund quotes, holding any refund until the customer confirms the exact order. *The complete vertical slice — real Qwen tool selection, parser-owned execution, the money-impacting refund gate, append-only artifacts — and the canonical "what a turn looks like."*
+- **`coding_agent`** — A coding agent that repairs a failing Python test suite by reading and editing files in a workspace until the tests pass. *Same harness, `Engine`, `ToolCodec`, and timeline as the retail agent, with real cache metrics — proof the control plane isn't domain-specific.*
+- **`banking_agent`** — A banking customer-service agent that checks account balances and transfers funds, with every transfer gated behind an exact confirmation. *Binds confirmation to **two fields** (`from_account:amount`), so confirming a 100 USD transfer can't approve a 999 USD one; adds two eval scenarios.*
+- **`rag_search`** — A documentation-assistant agent that answers questions by searching a knowledge base before it replies. *A read-only `search_docs(query)` tool delegating to a Python companion via `std.python` — the pattern for tools that need no gate or harness change; swap its body for real embeddings to get semantic search.*
+- **`custom_backend`** — Not an agent but a drop-in engine: it runs the entire harness against any OpenAI-compatible endpoint (`max serve`, Ollama, OpenAI) instead of the in-process model. *`RemoteBackend` implements `Engine`; honest trade-off — `cached_tokens` is always 0 because the REST boundary hides `num_cached_tokens`, so in-process stays the only path to real cache telemetry.*
+- **`graph_policy_gate`** — A policy-enforcement spike that compiles the refund gate into the model's own decoding as a Mojo custom op, so the forbidden tool can't even be spelled. *`gated_logits` compiled into a MAX graph and run inside a live Qwen3's sampler — the constrained-decoding frontier in miniature.*
+- **`grammar_policy_gate`** — The airtight version of that gate: it makes the refund tool structurally unreachable by riding MAX's own llguidance grammar engine (GPU-only). *Together with `graph_policy_gate`, it maps one policy onto two enforcement layers.*
 
 ## Build it — and don't `mojo run` it
 
