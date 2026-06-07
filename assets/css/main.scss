@@ -1,0 +1,28 @@
+---
+# Front matter required so Jekyll processes this Sass file.
+---
+
+@charset "utf-8";
+
+// --- Ember accent + typography (set BEFORE importing Minimal Mistakes) ---
+$link-color: #ff5a1f;
+$primary-color: #ff5a1f;
+$link-color-hover: #d8431a;
+
+$sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$header-font-family: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$monospace: "JetBrains Mono", Menlo, Consolas, Monaco, "Courier New", monospace;
+
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
+@import "minimal-mistakes";
+
+// --- small extras ---
+.page__hero--overlay .page__title,
+.page__hero--overlay .page__lead {
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+}
+
+.page__content img.brand-logo {
+  background: transparent;
+  box-shadow: none;
+}

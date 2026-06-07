@@ -1,18 +1,17 @@
 ---
 title: "Part 2 — What Was Achieved"
-parent: "Ignis — Finding Your Mojo from DwarfStar"
-nav_order: 2
+header:
+  overlay_image: /assets/images/hero-ember.svg
+  overlay_filter: 0.5
+  teaser: /assets/images/hero-ember.svg
+sidebar:
+  nav: "ignis"
 ---
-
-# Ignis — Finding Your Mojo from DwarfStar
-
-## Part 2 — What Was Achieved
 
 *Part 2 of the Ignis expedition. [Part 0](./00-curiosity-and-the-plan.md) laid out a plan, M0 through M5. This part grades it — honestly, against what's actually verified, with the headline result first and the things I did **not** measure stated as plainly as the things I did. The deep mechanics live in [Part 4](./04-max-the-platform.md); this is the scorecard.*
 
----
 
-### The headline: a conversation that survives its own process
+## The headline: a conversation that survives its own process
 
 The single most distinctive thing Ignis does — the one capability a stateless REST server cannot offer and that MAX does not hand you — is **durable session resume**. One process holds a conversation and saves; a *separate* process loads it and continues, with the model's KV warm:
 
@@ -24,7 +23,7 @@ A fresh process, 1152 tokens of the restored conversation served from disk, the 
 
 Why it's the headline: MAX's tiered connector persists KV blocks to disk keyed by token-prefix hash, and a fresh process reuses them if it sends a matching prefix. But MAX has **no concept of a conversation** — it doesn't store your message history and doesn't know a new process is the same session as a dead one. So the harness owns the binding: it persists its timeline and restores it so the re-rendered prompt is *byte-identical*, reproducing the exact token prefix the on-disk KV was keyed on. Everything else in Ignis is a competent assembly of MAX primitives; this is the part where the harness adds something MAX deliberately leaves to you. (The mechanics, and the three `TieredConnector` bugs it works around, are in [Part 4](./04-max-the-platform.md) and [Part 5](./05-the-journey.md).)
 
-### The scorecard against "The Plan"
+## The scorecard against "The Plan"
 
 In [Part 0](./00-curiosity-and-the-plan.md) the roadmap ran M0 (control plane) → M1 (real repo) → M2 (real MAX) → M3 (the `ds4` lesson) → M4 (Mojo in the graph) → M5 (deeper integration). Here's where each landed.
 
@@ -39,7 +38,7 @@ In [Part 0](./00-curiosity-and-the-plan.md) the roadmap ran M0 (control plane) �
 
 The thing to notice: **M2 went further than planned.** The plan hedged toward a non-streaming MAX *endpoint*; what shipped puts the model in the harness's own process. That single change is what makes every other result possible — reading MAX's real cache numbers directly, keeping the model's exact bytes without an OpenAI-JSON round trip, and binding a durable conversation to durable KV.
 
-### Real numbers, measured not invented
+## Real numbers, measured not invented
 
 Because the model is in-process, Ignis reads cache reuse straight off MAX's `num_cached_tokens` and logs it unmodified. From a live in-process Qwen3-8B run with prefix caching on (these are `MaxBackend` numbers, not the fixture):
 
@@ -61,14 +60,14 @@ turn3 confirm -> model chose issue_refund_quote (cached_tokens=256) -> APPROVED
 
 The safety invariants that run in CI (order-id binding, rejecting an unterminated call, the control that "yesterday" is not "yes") are checked against scripted outputs, so they reproduce with no model present. The live model was verified separately. That split is deliberate: the policy properties stay deterministic.
 
-### The custom-op result, in one line each (depth in [Part 4](./04-max-the-platform.md))
+## The custom-op result, in one line each (depth in [Part 4](./04-max-the-platform.md))
 
 - **A Mojo custom op runs in the MAX graph.** `gated_logits` (`@compiler.register`, `def execute`) compiles in and enforces the refund gate as a graph node — and runs inside a live Qwen3's decode loop via `SamplingParams.logits_processors`. Gate closed, the model can't spell the refund tool. *Verified* (`GATE_OP_DEMO_OK`, `LIVE_GATE_OK`).
 - **An airtight version rides MAX's own grammar engine.** A `response_format` enum chosen by the policy makes the refund tool structurally unreachable via llguidance. *Verified on H100* (`GRAMMAR_GATE_OK`).
 
 Both are real; the two-gates story is where I unpack what each proves and what it costs.
 
-### What I did NOT measure (the honest column)
+## What I did NOT measure (the honest column)
 
 A scorecard that only lists wins is marketing. So, plainly:
 

@@ -1,33 +1,64 @@
 title: "Abdul Muneer"
+name: "Abdul Muneer"
 description: "Abdul Muneer's personal blog — notes and writing on the things I build."
 url: "https://abdulmuneer.github.io"
 baseurl: ""
+repository: "abdulmuneer/abdulmuneer.github.io"
+locale: "en-US"
 
-theme: just-the-docs
+theme: minimal-mistakes-jekyll
+minimal_mistakes_skin: "default"
+
+# Search (Minimal Mistakes / lunr)
+search: true
+search_full_content: true
+
+words_per_minute: 200
+
+# Author profile (sidebar)
+author:
+  name: "Abdul Muneer"
+  bio: "I build things and write up what they teach me."
+  avatar: "/assets/images/avatar.svg"
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/abdulmuneer"
+
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/abdulmuneer"
 
 plugins:
-  - jekyll-relative-links
+  - jekyll-include-cache
+  - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
+  - jekyll-relative-links
 
-# jekyll-relative-links: rewrites [text](./other-part.md) links to the built page URL
+# jekyll-relative-links: rewrite [text](./other-part.md) links to built page URLs
 relative_links:
   enabled: true
   collections: false
 
-# Just the Docs options
-search_enabled: true
-heading_anchors: true
-color_scheme: light
-aux_links:
-  "View source on GitHub":
-    - "https://github.com/abdulmuneer/abdulmuneer.github.io"
-aux_links_new_tab: true
+# Apply the single layout + author profile + TOC to all pages by default
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      toc: true
+      toc_sticky: true
 
-# Files that are not site content
 exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
   - README.md
   - .github
+  - build_pages.py

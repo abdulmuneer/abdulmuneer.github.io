@@ -1,24 +1,28 @@
 ---
 title: "Part 3 — Mojo, the Language"
-parent: "Ignis — Finding Your Mojo from DwarfStar"
-nav_order: 3
+header:
+  overlay_image: /assets/images/hero-mojo.svg
+  overlay_filter: 0.5
+  teaser: /assets/images/hero-mojo.svg
+sidebar:
+  nav: "ignis"
 ---
-
-# Ignis — Finding Your Mojo from DwarfStar
-
-## Part 3 — Mojo, the Language
 
 *Part 3 of the Ignis expedition. My assessment of Mojo at 1.0 beta, from building a real program in it — not from reading release notes. Where it has matured, where it bites, and the one thing that decides whether it fits your project at all.*
 
----
+<p><img class="brand-logo" src="/assets/images/brand/mojo-wordmark.svg" alt="Mojo" width="200"></p>
 
-### What Mojo is (and what it isn't)
+*Mojo and the Mojo flame are trademarks of Modular Inc.; shown here for identification.*
+
+
+
+## What Mojo is (and what it isn't)
 
 When Mojo was announced in May 2023, a lot of Python programmers read the pitch the same way I did: a Python-like language with C++-like performance, a superset you could adopt without rewriting anything. A drop-in replacement. It never worked out that way — the distance between code that *looks* like Python and code that *runs* my Python stayed large across every attempt.
 
 The 1.0 beta is a different animal from that 2023 sketch. The right way to understand it is **not** "Python but fast." It's a Python-*family* systems language: static types, value ownership, traits, generics, compile-time parameterization, GPU/kernel authoring — with Python interop as a bridge, not a foundation. Judged as a drop-in Python replacement it loses on ecosystem size. Judged as a compiled control-plane language sitting close to a model runtime, it's a genuinely credible choice today. Ignis is the second test, and that framing matters for everything below.
 
-### New to Mojo? A five-minute primer
+## New to Mojo? A five-minute primer
 
 *If you already write Mojo, skip to [Why Python is in the loop at all](#why-python-is-in-the-loop-at-all). This section is for getting an absolute newcomer oriented enough to read the rest.*
 
@@ -87,7 +91,7 @@ That escape hatch is the entire model path in Ignis — and, as the rest of this
 
 That's enough to read on. The rest of this part is what living in it for a real project taught me.
 
-### Why Python is in the loop at all
+## Why Python is in the loop at all
 
 A fair question lands immediately: if MAX is Modular's Mojo-first runtime and Ignis is Mojo, where does Python enter? It enters **at the API you call.** The kernels, the graph compiler, and on-device execution are compiled, and Mojo is the language they're written in. But the developer-facing surface — load a model, build a request, run `generate` — ships as a Python library, `max.pipelines`. There is no Mojo-native call that loads Qwen3-8B and generates from it. So Ignis takes the only door available and embeds CPython.
 
@@ -106,7 +110,7 @@ PIPELINE_REGISTRY ─► compiled MAX graph + kernels   (native, on-device)
 
 So the headline needs its qualifier. *In-process* is accurate — the model runs in the same OS process as the harness, which is what removes the REST hop. *Pure Mojo* it is not: the path is `Mojo → embedded CPython → MAX's Python API → native kernels`. **Mojo is MAX's kernel language; it is not its orchestration language yet.** Removing CPython entirely would need a Mojo-native inference API that doesn't exist — and that sets the ceiling on how Mojo-native a project like this can be right now.
 
-### Where the language has matured
+## Where the language has matured
 
 The 1.0 beta is a real language with a coherent type system, and Ignis leans on the parts that carry weight.
 
@@ -132,7 +136,7 @@ def __init__(out self, var outputs: List[String]):
 
 For deterministic harness code — session state, encoders, parsers, policy checks — this is where Mojo delivers on the systems-language pitch. It already fits.
 
-### Where it bites
+## Where it bites
 
 Mature is not the same as comfortable, and most of the friction is the ownership model doing its job — which still costs you coming from Python.
 
@@ -142,7 +146,7 @@ Mature is not the same as comfortable, and most of the friction is the ownership
 - **A dev-build serializer bug cost me real time.** EmberJSON's `to_string` won't compile on this build (`'self' abandoned without being explicitly destroyed`). `parse` and value access are fine, so Ignis works around it by holding the parsed substring and re-`parse`-ing rather than serializing. Nearby cuts: `Object`/`Value` aren't `ImplicitlyCopyable` (borrow with `ref`), and accessors return library types you coerce back with `String(...)` / `Int(...)`.
 - **Error messages are serviceable, not a strength.** The failures that cost me most weren't type errors with a clear location — they were cases where the compiler accepted the code and the *runtime* fell over, which diagnostics can't catch.
 
-### Batteries not included — the part that decides fit
+## Batteries not included — the part that decides fit
 
 This is the wall my original, bigger port hit, and it's what actually decides whether Mojo suits a given project.
 
@@ -152,7 +156,7 @@ This is the wall my original, bigger port hit, and it's what actually decides wh
 
 And here's the tension at the heart of the language today: **Python interop is the escape hatch, and leaning on it everywhere quietly gives up the drop-in story.** Mojo can import CPython, so you're never fully blocked — the entire model path in Ignis is `std.python` reaching into MAX. But if every missing battery is answered with "call Python," you haven't replaced Python, you've *wrapped* it. Interop is a migration path and a runtime bridge. It is not a native ecosystem.
 
-### My verdict on the language
+## My verdict on the language
 
 For what I built — a compiled, deterministic control plane running in-process with a model — **Mojo at 1.0 beta is ready enough to ship.** Traits, generics, ownership, and structs carried the harness. If your problem is a state machine near a model — a parser, a policy gate, an encoder, a tool loop — Mojo is a credible choice *today*.
 

@@ -1,18 +1,17 @@
 ---
 title: "Part 5 — My Journey, and a Thank-You"
-parent: "Ignis — Finding Your Mojo from DwarfStar"
-nav_order: 5
+header:
+  overlay_image: /assets/images/hero-ember.svg
+  overlay_filter: 0.5
+  teaser: /assets/images/hero-ember.svg
+sidebar:
+  nav: "ignis"
 ---
-
-# Ignis — Finding Your Mojo from DwarfStar
-
-## Part 5 — My Journey, and a Thank-You
 
 *Part 5 of the Ignis expedition. The trail told as a trail — the false starts, the crashes, the four times MAX was already standing where I thought the frontier was — and then the verdict, and a genuine appreciation for what Modular has built.*
 
----
 
-### How I ended up here
+## How I ended up here
 
 When Mojo was announced in May 2023, I read the pitch the way a lot of Python programmers did: a Python-like language with C++-like performance, a superset I could adopt without rewriting anything. I wanted a drop-in replacement. It never worked out that way — the distance between code that *looks* like Python and code that *runs* my Python stayed large.
 
@@ -20,7 +19,7 @@ When Mojo reached 1.0 beta I wanted to measure how far it had come by *building*
 
 I came back after watching antirez build [`ds4`](https://github.com/antirez/ds4) on a Mac. What caught me wasn't the kernels — it was architectural: he ran the harness and the model in **one runtime**, which turns the KV cache from a hidden server detail into state the program can save, reload, and inspect. It reframed the port. Maybe Mojo's job here wasn't to replace Python across the whole call center, but to be the compiled control plane sitting in the same process as the model. Could Mojo and MAX share a runtime that tightly? That experiment became Ignis.
 
-### The build, in the order it actually happened
+## The build, in the order it actually happened
 
 The dev log reads as a sequence of "I assumed X; the runtime taught me Y."
 
@@ -36,13 +35,13 @@ The dev log reads as a sequence of "I assumed X; the runtime taught me Y."
 
 (One non-Mojo lesson, recorded because it cost a working tree: review/research sub-agents given write access corrupted the repo more than once. Give them read-only tools.)
 
-### The verdict
+## The verdict
 
 For what I built — a compiled, deterministic control plane running in-process with MAX — **Mojo at 1.0 beta is ready enough to ship.** If your problem is a state machine near a model, Mojo is a credible choice today. For a drop-in replacement of a batteries-included Python application, it is not, and there's no use pretending: no stdlib JSON, a young service ecosystem, the constant pull toward interop. The ecosystem is three years old; that's the explanation, not a design flaw.
 
 And the second wall, drawn precisely, because getting its *location* right is the whole point. Ignis shares a runtime with the model in-process, but CPython is still the orchestrator — it loads the model, builds the request, runs the sampling loop. The custom op shows the wall isn't where you'd guess: compiled Mojo *can* reach into the model's compute. What remains is narrower than "Mojo can't touch the model" — it's that the *orchestration* API is Python, with no Mojo-native way to load Qwen3 and drive `generate`. I could have waited for that door to open before publishing. I'd rather ship the working in-process slice, with compiled Mojo in the decode loop, plus a clear map of where the wall sits. **The repo marks how far the road goes, not where it ends.**
 
-### A thank-you to Modular
+## A thank-you to Modular
 
 It would be easy to read five parts of "here's where it bit me" as a complaint. It isn't one. Every sharp edge in this series exists because Modular is attempting something genuinely hard and genuinely worth doing: a single language that spans agent logic, systems code, and graph-compiled kernels, on a runtime that refuses to be locked to one vendor's silicon. Most of the ambition has *landed*. Mojo's ownership model, traits, and generics carried a real harness cleanly. MAX's in-process pipeline, honest cache telemetry, custom ops, the logits-processor seam, the llguidance grammar engine, and the tiered KV connector are not toys — they're the load-bearing primitives that made every result here possible, and most of them were already there when I went looking. The recurring experience of reaching for the frontier and finding Modular already standing on it is, in the end, a compliment to how much they've built.
 

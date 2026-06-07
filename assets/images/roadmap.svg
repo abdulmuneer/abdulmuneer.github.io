@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 200" width="1120" height="200" font-family="Arial, Helvetica, sans-serif">
+  <rect width="1120" height="200" fill="#ffffff"/>
+  <line x1="90" y1="70" x2="1030" y2="70" stroke="#F0C9B4" stroke-width="6" stroke-linecap="round"/>
+  <g>
+    <!-- nodes -->
+    <g fill="#FF5A1F">
+      <circle cx="90" cy="70" r="24"/>
+      <circle cx="278" cy="70" r="24"/>
+      <circle cx="466" cy="70" r="24"/>
+      <circle cx="654" cy="70" r="24"/>
+      <circle cx="842" cy="70" r="24"/>
+      <circle cx="1030" cy="70" r="24"/>
+    </g>
+    <g fill="#ffffff" font-size="17" font-weight="700" text-anchor="middle">
+      <text x="90" y="76">M0</text>
+      <text x="278" y="76">M1</text>
+      <text x="466" y="76">M2</text>
+      <text x="654" y="76">M3</text>
+      <text x="842" y="76">M4</text>
+      <text x="1030" y="76">M5</text>
+    </g>
+    <g fill="#55514e" font-size="15" text-anchor="middle">
+      <text x="90"  y="120">control<tspan x="90" dy="18">plane</tspan></text>
+      <text x="278" y="120">repo<tspan x="278" dy="18">+ CI</tspan></text>
+      <text x="466" y="120">in-<tspan x="466" dy="18">process</tspan></text>
+      <text x="654" y="120">exact<tspan x="654" dy="18">replay</tspan></text>
+      <text x="842" y="120">custom<tspan x="842" dy="18">ops</tspan></text>
+      <text x="1030" y="120">durable<tspan x="1030" dy="18">KV</tspan></text>
+    </g>
+  </g>
+</svg>

@@ -1,18 +1,21 @@
 ---
 title: "Ignis — Finding Your Mojo from DwarfStar"
-nav_order: 1
-has_children: true
-has_toc: false
+permalink: /ignis.html
+excerpt: "A six-part expedition into a Mojo-native, in-process MAX agent harness."
+header:
+  overlay_image: /assets/images/hero-ember.svg
+  overlay_filter: 0.5
+sidebar:
+  nav: "ignis"
+toc: false
+author_profile: false
 ---
-
-# Ignis — Finding Your Mojo from DwarfStar
 
 A six-part blog series: field notes from building **Ignis**, a Mojo-native agent
 harness that runs a MAX-served LLM in the same OS process as the control plane.
 Less "release notes," more "what I found going into the innards of Mojo and MAX."
 
-Use the sidebar to navigate, or start at the top:
-
+{: .notice--info}
 **New to Mojo or MAX?** Parts 3 and 4 each open with a from-scratch, five-minute primer — enough to onboard someone who has never touched either before diving into the assessment. If you already know the tools, skip those intros and go straight to the details; the rest of the series doesn't repeat them.
 
 ## The series

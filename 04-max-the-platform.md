@@ -1,18 +1,22 @@
 ---
 title: "Part 4 — MAX, the Platform"
-parent: "Ignis — Finding Your Mojo from DwarfStar"
-nav_order: 4
+header:
+  overlay_image: /assets/images/hero-max.svg
+  overlay_filter: 0.5
+  teaser: /assets/images/hero-max.svg
+sidebar:
+  nav: "ignis"
 ---
-
-# Ignis — Finding Your Mojo from DwarfStar
-
-## Part 4 — MAX, the Platform
 
 *Part 4 of the Ignis expedition. The deep one. What MAX is and where it sits among NVIDIA's stack and the open-source engines; my assessment of it as an in-process runtime; and the technical climax — compiling Ignis's refund policy into the decoder two ways, which is where "is Mojo a peer in the graph or just a wrapper?" finally gets answered.*
 
----
+<p><span style="display:inline-block;background:#6D28D9;border-radius:10px;padding:8px;vertical-align:middle"><img src="/assets/images/brand/max-flash.svg" alt="MAX" width="22" style="display:block"></span> <strong style="font-size:1.7em;vertical-align:middle;margin-left:8px">MAX</strong></p>
 
-### What MAX is
+*MAX and Modular are trademarks of Modular Inc.; logo shown here for identification.*
+
+
+
+## What MAX is
 
 MAX is unusual in bundling several layers that other vendors ship as separate products. When you say "MAX," you're naming at least four things at once:
 
@@ -23,7 +27,7 @@ MAX is unusual in bundling several layers that other vendors ship as separate pr
 
 That bundling is the key to understanding both its competitors and its character.
 
-### New to MAX? A five-minute primer
+## New to MAX? A five-minute primer
 
 *If you've already served a model with MAX, skip to [Is there a MAX from NVIDIA?](#is-there-a-max-from-nvidia). This section gets a newcomer oriented.*
 
@@ -61,7 +65,7 @@ This is the seam Ignis crosses from Mojo via `std.python`. It's "more in-process
 
 **Mojo, the kernel language.** The orchestration surface above (`max.pipelines`, `max serve`) is Python — but the kernels *under* it are written in Mojo, and custom ops are how you author new ones. That split (Python to drive, Mojo to compute) is the single most important thing to hold onto, and the rest of the series turns on it.
 
-### Is there a MAX from NVIDIA?
+## Is there a MAX from NVIDIA?
 
 A colleague, watching me wire Mojo into the in-process pipeline, asked the obvious question: isn't there already an equivalent from NVIDIA, or anyone? The answer depends on *which layer* you mean — no single product covers all four.
 
@@ -90,7 +94,7 @@ A colleague, watching me wire Mojo into the in-process pipeline, asked the obvio
 
 There's no "MAX from NVIDIA" because MAX's whole identity is the *refusal* to be from one vendor — fusing compiler, portable runtime, kernel language, and serving into one stack. Which is exactly why it's the right substrate for an experiment about *proximity*.
 
-### What MAX gave Ignis
+## What MAX gave Ignis
 
 As an in-process runtime, MAX delivered more than I expected, and kept delivering things I assumed I'd have to build:
 
@@ -103,13 +107,13 @@ As an in-process runtime, MAX delivered more than I expected, and kept deliverin
 
 The last four are the ingredients for the technical climax, and for a lesson that kept repeating.
 
-### The climax: compiling a policy into the decoder
+## The climax: compiling a policy into the decoder
 
 If you want to know whether Mojo is a real participant in the model's computation or just polite host-side glue, make it do something that *has* to happen during token selection. So I took Ignis's signature policy — the order-id-bound refund gate — and tried to move it from host-side control flow *into the decoder itself*: can the model be made **structurally unable** to call `issue_refund_quote` until an exact, matching confirmation opens it?
 
 I built it twice, and the gap between the two versions is the actual shape of today's frontier.
 
-#### Gate one — a Mojo custom op, from scratch
+### Gate one — a Mojo custom op, from scratch
 
 The first version (`examples/graph_policy_gate`) is a Mojo custom op compiled into a MAX graph — the smallest real thing, an elementwise additive logit mask:
 
@@ -139,7 +143,7 @@ GATE CLOSED (gated_logits Mojo op)  -> tool = issue_deferred_payment
 
 An earlier version got beaten by literally `issue_REFUND_QUOTE` — uppercase tokenizes to different ids. You widen the set; the model finds another synonym. It's a losing game for a principled reason: masking token ids can never enumerate every string that *means* the forbidden thing. So the honest scorecard for gate one: ✅ proves a Mojo op can author + compile + execute enforcement as a graph node; ❌ no speedup (routing a vector add through a graph is *slower*); ❌ not airtight.
 
-#### Gate two — riding MAX's own grammar engine
+### Gate two — riding MAX's own grammar engine
 
 Airtight enforcement isn't token masking, it's grammar/FSM-constrained decoding — and the second gate (`examples/grammar_policy_gate`) is the admission that *I shouldn't write that myself.* MAX already ships it: an llguidance bitmask applied inside the sampler graph (`ops.where(bitmask, logits, -inf)`). I reach it through the same in-process pipeline by attaching a `response_format` JSON schema whose tool-name `enum` **is** the policy:
 
@@ -148,7 +152,7 @@ Airtight enforcement isn't token masking, it's grammar/FSM-constrained decoding 
 
 The decision is still Ignis's (the same `is_confirmation` + order-id binding); MAX *enforces* it, and the forbidden direction is now airtight (`GRAMMAR_GATE_OK`, on an H100). The synonym evasion is structurally gone. It cost a pile of warts I only found by building it: **GPU only** (`enable_structured_output` raises on CPU); the bare in-process path needs **`max_batch_size=1`**; **greedy (`top_k=1`) required** (sampling can pick a padding token above the grammar's vocab range and abort llguidance); enforcement is **guaranteed only up to the policy-critical field** (the matcher rejects EOS in a non-accepting state and self-disables for the JSON tail — fine for a name-gating policy, but you have to know it); and it's a **parallel raw-JSON path**, not Qwen's Hermes `<tool_call>` wrap, so it doesn't feed the existing `HermesToolCodec`.
 
-#### The answer to peer-or-wrapper
+### The answer to peer-or-wrapper
 
 Side by side, the two gates resolve the question into something more precise than either word:
 
@@ -156,7 +160,7 @@ Side by side, the two gates resolve the question into something more precise tha
 
 Mojo is the right tool for *small, bespoke* decision logic you want compiled next to the model; MAX's grammar engine is the right tool for airtight structural constraints. Neither pure wrapper nor full co-author of the decoder — a peer for the part worth authoring by hand, a disciplined client for the part that isn't.
 
-### The frontier kept being MAX's — except one thing
+## The frontier kept being MAX's — except one thing
 
 This is the lesson that kept repeating, and it relocates where the real work is. Each time I reached for something that *felt* like the Mojo-native edge, MAX was already standing on it:
 
@@ -175,7 +179,7 @@ SESSION_RESUME_OK kv_warmstart_tokens=1152
 
 A separate process, 1152 tokens of the restored conversation served from disk, the model continuing — resume, not replay. It rides the *regular* `TieredConnector` plus a post-generation flush that works around three real connector bugs (an offload off-by-one for single-batch sessions; an async D2H event not ready when `sync()` checks it; metadata not flushed after `wait_for_writes()`). And the whole thing rests on the render staying byte-identical between save and resume — if the system prompt or formatting drifts, the warm-start vanishes silently, with correct output and lost reuse. Which is why that invariant has model-free CI guarding it.
 
-### My verdict on MAX
+## My verdict on MAX
 
 As an in-process runtime, MAX is further along than its Python-first positioning suggests, and that's the headline: **compiled Mojo can already reach into the model's compute today** — a custom op runs as a node in the graph, on the live logits, in the decode loop. The obstacle was never that two compiled worlds can't meet. What remains is narrower and specific: **the orchestration API is Python.** There's no Mojo-native way to load Qwen3 and drive `generate`, so the loop runs from CPython even while a Mojo kernel works inside it. A documented, supported in-process MAX-from-Mojo API would remove the integration traps and the last layer of CPython at once.
 

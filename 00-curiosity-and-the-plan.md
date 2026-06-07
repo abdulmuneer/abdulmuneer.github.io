@@ -1,18 +1,20 @@
 ---
 title: "Part 0 — The Curiosity and the Plan"
-parent: "Ignis — Finding Your Mojo from DwarfStar"
-nav_order: 0
+header:
+  overlay_image: /assets/images/hero-ember.svg
+  overlay_filter: 0.5
+  teaser: /assets/images/hero-ember.svg
+sidebar:
+  nav: "ignis"
 ---
-
-# Ignis — Finding Your Mojo from DwarfStar
-
-## Part 0 — The Curiosity and the Plan
 
 *Part 0 of the Ignis expedition. Before the code, the why: what made me curious about Mojo and MAX, why I decided to build instead of read, and the plan I set out with. The later posts are field notes; this is the trailhead.*
 
----
+<p style="text-align:center"><img class="brand-logo" src="/assets/images/roadmap.svg" alt="The M0 to M5 plan" style="width:720px;max-width:100%"></p>
 
-### The itch
+
+
+## The itch
 
 I keep a short list of technologies I trust enough to be skeptical about — things I've read the pitch for, nodded at, and never actually put my hands inside. Mojo and MAX had been on that list for a while. The pitch is easy to admire from a distance: a Python-family systems language with real ownership and compile-time machinery, sitting on top of an MLIR-based model runtime that compiles graphs and serves models across hardware. Easy to admire, and easy to never verify.
 
@@ -20,7 +22,7 @@ What I wanted wasn't another summary of the release notes. I wanted the innards.
 
 So the motivation for this whole expedition is plain: **build a real thing on Mojo and MAX, and write down what the stack actually does — not what it's marketed to do.**
 
-### The spark
+## The spark
 
 The shape of the thing came from watching antirez build [`ds4`](https://github.com/antirez/ds4), his small DeepSeek runtime. The part that grabbed me wasn't the kernels. It was an architectural decision: he ran the harness and the model **in one runtime**. That single choice turns the KV cache from a hidden detail of some inference server into *state your program owns* — something you can save, reload, and inspect. The session stops being a stateless request to a black box and becomes a first-class object the agent loop holds onto.
 
@@ -30,7 +32,7 @@ Once you see that, the usual setup looks backwards. The standard path is `max se
 
 That question is the whole expedition. Everything else is detail.
 
-### The bet
+## The bet
 
 The bet I'm making, and the one this series tests, is a division of ownership:
 
@@ -41,7 +43,7 @@ And one honesty clause I'm committing to up front, because it's the easiest thin
 
 There's a second clause, just as important: **no fabricated metrics.** If I report a cache number, it's MAX's real `num_cached_tokens`, page-granular and as-measured. The temptation in a project like this is to dress up the telemetry. The point of the expedition is the opposite — to find out what's actually there.
 
-### The plan
+## The plan
 
 I'm not trying to clone `ds4`. The serious translation is architectural, not line-by-line, and it staged out as a roadmap:
 
@@ -54,7 +56,7 @@ I'm not trying to clone `ds4`. The serious translation is architectural, not lin
 
 The center of gravity, deliberately, is **M2–M3**: get the model in-process, prove the cache is real, and make the session something the harness owns. M4 is the part I'm most curious about and least sure of — it's where "is Mojo actually a peer here, or just a wrapper?" gets answered.
 
-### What this series is
+## What this series is
 
 These posts are the log of going up that trail: what compiled, what crashed, what the docs promised versus what the runtime delivered, and where the Mojo-native dream stops at today's APIs. I'm releasing it whether or not it reaches the summit — a stack's real shape shows as clearly in where it stops you as in where it lets you through.
 

@@ -1,18 +1,20 @@
 ---
 title: "Part 1 — What It Is, and How to Run It"
-parent: "Ignis — Finding Your Mojo from DwarfStar"
-nav_order: 1
+header:
+  overlay_image: /assets/images/hero-ember.svg
+  overlay_filter: 0.5
+  teaser: /assets/images/hero-ember.svg
+sidebar:
+  nav: "ignis"
 ---
-
-# Ignis — Finding Your Mojo from DwarfStar
-
-## Part 1 — What It Is, and How to Run It
 
 *Part 1 of the Ignis expedition. [Part 0](./00-curiosity-and-the-plan.md) was the why. This is the what: the shape of the repo, the one design decision everything else hangs off, the control flow of a single turn, how to extend it, and how to build it and watch it run. If you only read one part to understand the artifact, read this one.*
 
----
+<p style="text-align:center"><img class="brand-logo" src="/assets/images/ignis-process.svg" alt="Harness and model in one OS process" style="width:560px;max-width:100%"></p>
 
-### What Ignis is, in one breath
+
+
+## What Ignis is, in one breath
 
 Ignis is a Mojo-native agent harness that runs the model **in the same OS process** as the control plane. There is no `curl`, no separate `max serve`, no REST hop. Compiled Mojo embeds CPython through `std.python` and drives MAX's in-process pipeline from there. The default model is `Qwen/Qwen3-8B`, loaded and graph-compiled in-process. A deterministic fixture backend runs the *same* harness with no model at all, which is what keeps CI fast and the design honest.
 
@@ -24,7 +26,7 @@ It is not a line-by-line port of [`ds4`](https://github.com/antirez/ds4) — the
 - keeps the timeline as a typed `List[SessionEntry]` with an append-only event log and non-destructive compaction;
 - gates the refund tool behind a confirmation tied to the specific order id, so a stray "yes" can't approve some other action.
 
-### The one decision everything hangs off
+## The one decision everything hangs off
 
 The whole design turns on a single trait that decouples the harness from the model:
 
@@ -47,7 +49,7 @@ Two backends satisfy `Engine`:
 
 `process_turn[E: Engine]` specializes at compile time, with no dynamic dispatch on the hot path. That's the trick that lets `make test` exercise the *entire* harness — parser, policy, cache-report plumbing, compaction, events — with no model present. The division of ownership is deliberate: **Mojo owns** the timeline, prompt rendering, tool parsing, policy, execution, replay bytes, and telemetry; **MAX owns** model execution, the KV prefix cache, and generated text.
 
-### The architecture, in one diagram
+## The architecture, in one diagram
 
 ```
                 ┌───────────────────────────────────────────────────────┐
@@ -85,7 +87,7 @@ Two backends satisfy `Engine`:
 
 Read it top-down: the CLI selects a scenario; `IgnisCore` owns all the deterministic state and logic; `process_turn` is generic, so the *same* control plane runs over either backend; only `MaxBackend` crosses the `std.python` seam into MAX. The boundary Mojo calls across is deliberately thin — `max_engine.py`'s `generate_raw(...)` is **string-in / compact-JSON-out** (`{text, prompt_tokens, cached_tokens, generated_tokens}`), so nothing about the model leaks into the harness except bytes and honest numbers.
 
-### The control flow of a single turn
+## The control flow of a single turn
 
 A tool turn is **two in-process model calls**, with the policy gate in between. Here is the lifecycle:
 
@@ -120,13 +122,13 @@ Two design choices fall out of this:
 1. **Two calls, not one.** Call #1 carries the tool schemas and the model emits a `<tool_call>`; call #2 omits the tools, appends the tool result, and the model writes the customer-facing sentence. They're kept as separate requests so MAX's prefix cache reuses the shared context across both — which is exactly what `num_cached_tokens` shows climbing turn over turn.
 2. **The model chooses; the harness decides whether to act.** There is no keyword pre-decision and no `tool_choice` pinning. The harness parses the model's *exact emitted bytes* with EmberJSON into a typed `ToolCall`, then the policy gate runs before any execution. A refund is denied until an explicit confirmation whose `order_id` matches the pending one — a bare "yes" (e.g. inside "yesterday") never approves, and confirming one order never approves another.
 
-### Against the grain of the official path
+## Against the grain of the official path
 
 It helps to see what Ignis is *not*. Modular's own agentic cookbook goes the other way: `max serve` runs the model as a separate process, a Python FastAPI backend talks to it over HTTP through the OpenAI SDK, and no Mojo appears anywhere. The agent loop is ordinary OpenAI function calling — stream chunks, check `finish_reason == "tool_calls"`, run the tool, append, call again. It's clean, practical, and matches how MAX is positioned: serving infrastructure behind an OpenAI-compatible endpoint any provider could stand in for.
 
 Ignis reverses every one of those choices. No `max serve`, no REST hop, a compiled Mojo control plane driving the engine in the same OS process. The cookbook calls MAX as a service; **Ignis runs inside it.** Whether that trade pays off depends on the workload — a web backend serving many users wants the separation (it scales horizontally and is simpler to operate); an experiment in tight Mojo-MAX coupling wants the opposite, and so does the `ds4` design where the session *is* the persisted KV. Ignis is the second kind of program.
 
-### The repo, briefly
+## The repo, briefly
 
 - **`ignis.mojo`** — the control plane: `IgnisCore` session state, the `List[SessionEntry]` timeline, prompt rendering, the exact-confirmation policy, tool execution, the CLI, the behavioral eval suite, and a second "coding agent" scenario. The bulk of the code.
 - **`ignis_json.mojo`** — the typed tool boundary: `ToolCall`, the `ToolCodec` trait, `HermesToolCodec`, `decode_tool_call[C: ToolCodec]`, all backed by EmberJSON.
@@ -135,7 +137,7 @@ Ignis reverses every one of those choices. No `max serve`, no REST hop, a compil
 - **`examples/`** — runnable scenarios and extension demos (catalog below).
 - **`docs/extensions.md`** — the one tracked doc: how to add tools, policies, backends, and custom ops without breaking Ignis's contracts.
 
-### Extending Ignis
+## Extending Ignis
 
 The rule, from `docs/extensions.md`: *extensions may add behavior, but must not bypass the typed `ToolCall`, the policy gate, or the append-only event log.* There are five extension points:
 
@@ -156,7 +158,7 @@ def execute_tool(name: String, order_id: String) -> String:
 
 **Timeline / telemetry.** Append `SessionEntry` values with an explicit `prompt_visible` flag; runtime-only state (cache stats, replay bytes) stays in events and out of the model-visible bytes. Preserve the **byte-identical re-render invariant** — durable session resume depends on `render_messages()` being a pure function of the prompt-visible entries.
 
-### Examples included
+## Examples included
 
 Each lives under `examples/` with its own README; the first two are full end-to-end scenarios, the rest are focused extension demos:
 
@@ -168,7 +170,7 @@ Each lives under `examples/` with its own README; the first two are full end-to-
 - **`graph_policy_gate`** — the Mojo custom op (`gated_logits`) compiled into a MAX graph and run inside a live Qwen3's sampler. The constrained-decoding frontier, in miniature.
 - **`grammar_policy_gate`** — the airtight version riding MAX's own llguidance grammar engine (GPU-only). Together with `graph_policy_gate` it maps the same policy onto two enforcement layers.
 
-### Build it — and don't `mojo run` it
+## Build it — and don't `mojo run` it
 
 The first thing to internalize, because no type checker will catch it: **Ignis is a build-and-run program, never a `mojo run` program.** Launch anything that drives MAX's engine under JIT and model init crashes with `LLVM ERROR: ... M::Context with different Init::Options`. There is one process-global Modular context, and the JIT runtime and MAX disagree on its options. `mojo build` the binary, run *that*, and it initializes the context in a way MAX accepts. The Makefile always builds first.
 
@@ -180,7 +182,7 @@ VIRTUAL_ENV=/path/.venv PATH=/path/.venv/bin:$PATH ./ignis retail-live
 
 (New to Mojo or MAX? [Part 3](./03-mojo-the-language.md) and [Part 4](./04-max-the-platform.md) each open with a from-scratch primer.)
 
-### The commands
+## The commands
 
 ```bash
 make deps            # git-clone EmberJSON into third_party/ (or: pixi install)
@@ -196,7 +198,7 @@ make backend-demo    # standalone max_backend.mojo spike (real model)
 
 The compiled CLI is `./ignis <command> [event-log-path]`, where command is `retail-fixture | retail-live | coding-fixture | coding-live | eval | help`. There's no per-test runner: the granularities are `make json-test` (parser self-tests), `make eval` (all behavioral scenarios — non-zero exit unless every one passes), or a single end-to-end scenario via `./ignis retail-fixture`.
 
-### A caution that matters before you read any trace
+## A caution that matters before you read any trace
 
 `make test` writes an `events.log` — but it's the **fixture** run, not a live one. `FixtureBackend` emits the *same event shape* as live on purpose (that's the point of the trait), but its numbers are synthetic: `prompt_tokens` is the literal `200`, `cached_tokens` marches `0/128/256/384`. The `source=max_num_cached_tokens` tag on a cache event is plumbing, not evidence. Real telemetry comes off a live `MaxBackend` run. Never read a fixture trace as live numbers — a discipline that runs through the whole project and is the subject of [Part 2](./02-what-was-achieved.md).
 

@@ -1,10 +1,12 @@
 source "https://rubygems.org"
 
 gem "jekyll", "~> 4.3"
-gem "just-the-docs", "~> 0.8"
+gem "minimal-mistakes-jekyll"
 
 group :jekyll_plugins do
-  gem "jekyll-relative-links"
+  gem "jekyll-include-cache"
+  gem "jekyll-feed"
   gem "jekyll-seo-tag"
   gem "jekyll-sitemap"
+  gem "jekyll-relative-links"
 end
