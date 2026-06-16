@@ -59,7 +59,7 @@ async for output in pipeline.generate_async(request):
     ...   # output.tokens, and output.num_cached_tokens - the real cache count
 ```
 
-This is the seam Ignis crosses from Mojo via `std.python`. It's "more in-process" than `max serve` (the model runs inline in the calling thread), which is what lets the harness read MAX's real `num_cached_tokens` and keep the model's exact tool-call bytes without a REST round-trip.
+This is the seam Ignis crosses from Mojo via `std.python`. It's "more in-process" than `max serve` (the model runs inline in the calling thread). The payoff that REST genuinely can't match is the model's **exact emitted tool-call bytes**: an OpenAI endpoint hands you a normalized `tool_calls` object, having already parsed and discarded the raw `<tool_call>` text Ignis replays - inline, you keep the bytes. The cache number rides along for free too (MAX's `num_cached_tokens`, read directly rather than depending on a server to expose it).
 
 **The deeper layers** are where this part is headed. **MAX Graph** is the symbolic-graph + compiler layer; **Mojo custom ops** (`@compiler.register` / `ops.custom`) let you drop your own compiled kernel into that graph; and the sampler exposes hooks (`SamplingParams.logits_processors`) and production **constrained decoding** (an llguidance grammar engine). Those four are exactly the parts the two gates below are built from - and `Qwen3` here is a "thinking" model, so it emits a `<think>…</think>` preamble the harness strips, a small wrinkle worth knowing before you read live output.
 

@@ -43,7 +43,7 @@ One thing I want to be straight about up front, because it's the easy claim to o
 
 ## The plan
 
-I looked at `ds4` and tried to translate the architectural. It became apparent over a few iterations that Max is alreading standing on every hill that I was trying to conquer. A drop-in ds4 equivalent was not possible for me at this phase. So I staged out a rough roadmap as:
+I looked at `ds4` and tried to translate the architecture, not the code - and the runtime gap is worth naming up front, because the whole series lives inside it. ds4 is a self-contained C engine: its own CUDA and Metal kernels, the agent loop and the inference loop the same program, with direct reach into the KV cache and the logits. Ignis can't be that - it drives MAX's Python pipeline across a CPython boundary - so it reaches for the same *property*, the session as KV state the program owns, by assembling MAX's primitives in one process rather than by owning the engine. It became apparent over a few iterations that MAX was already standing on every hill I'd set out to conquer, so a drop-in ds4 equivalent was never on the table. I staged out a rough roadmap instead:
 
 - **M0 - control plane.** A Mojo harness with a typed timeline, tool parsing, and a policy gate that runs with no model at all, through a fixture backend. One `Engine` trait, two implementations, one generic turn loop - so CI can exercise the whole harness without a GPU.
 - **M1 - a real repo.** Makefile, docs, fixtures, model-free CI.
