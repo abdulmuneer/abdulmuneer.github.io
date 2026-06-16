@@ -7,13 +7,13 @@ header:
   overlay_filter: 0.45
   actions:
     - label: "Read the Ignis series"
-      url: /ignis.html
+      url: /ignis/
 feature_row:
   - image_path: /assets/images/hero-mojo.svg
-    alt: "Ignis — Finding Your Mojo from DwarfStar"
-    title: "Ignis — Finding Your Mojo from DwarfStar"
-    excerpt: "A six-part expedition into **Ignis**, a Mojo-native agent harness that runs a MAX-served LLM in the *same OS process* as the control plane. An honest account of what Mojo and MAX actually do at the 1.0-beta frontier — from building a real program on them. *(New to Mojo or MAX? Two parts open with from-scratch primers.)*"
-    url: /ignis.html
+    alt: "Ignis - Finding Your Mojo from DwarfStar"
+    title: "Ignis - Finding Your Mojo from DwarfStar"
+    excerpt: "A six-part expedition into **Ignis**, a Mojo-native agent harness that runs a MAX-served LLM in the *same OS process* as the control plane. An honest account of what Mojo and MAX actually do at the 1.0-beta frontier - from building a real program on them. *(New to Mojo or MAX? Two parts open with from-scratch primers.)*"
+    url: /ignis/
     btn_label: "Read the series"
     btn_class: "btn--primary"
 ---
@@ -22,7 +22,7 @@ feature_row:
 
 ## Welcome
 
-This is my personal blog — where I write up the things I build and what they
+This is my personal blog - where I write up the things I build and what they
 teach me, usually in more detail than fits in a README.
 
 *More writing to come. You can find me on [GitHub](https://github.com/abdulmuneer).*

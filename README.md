@@ -8,7 +8,7 @@ Built with [Jekyll](https://jekyllrb.com/) and the
 [Just the Docs](https://just-the-docs.com/) theme, deployed via GitHub Actions
 (`.github/workflows/pages.yml`).
 
-- `index.md` — blog home (landing page).
+- `index.md` - blog home (landing page).
 - `ignis.md` — the *Ignis — Finding Your Mojo from DwarfStar* series landing
   (a Just the Docs parent page); `0*-*.md` are its six parts (children).
 
