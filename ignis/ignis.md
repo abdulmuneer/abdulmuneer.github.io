@@ -24,7 +24,7 @@ Less "release notes," more "what I found going into the innards of Mojo and MAX.
 - [Part 2 - What Was Achieved](./02-what-was-achieved.md) - a scorecard against the plan, headlined by durable cross-process session resume, with the numbers I measured and the ones I deliberately didn't.
 - [Part 3 - Mojo, the Language](./03-mojo-the-language.md) - a from-scratch primer, then an assessment of Mojo at 1.0 beta from building in it: where it matured, where it bites, and why batteries-not-included decides fit.
 - [Part 4 - MAX, the Platform](./04-max-the-platform.md) - a from-scratch primer, what MAX is and its place among NVIDIA's stack, vLLM/SGLang, and the MLIR compilers; then the deep climax - compiling Ignis's refund policy into the decoder two ways.
-- [Part 5 - My Journey, and a Thank-You](./05-the-journey.md) - the trail told as a trail, the verdict, and a genuine appreciation for what Modular built.
+- [Part 5 - My Journey](./05-the-journey.md) - the trail told as a trail, the verdict, and a genuine appreciation for what Modular built.
 
 ---
 
