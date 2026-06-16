@@ -1,5 +1,5 @@
 ---
-title: "Part 5 - My Journey, and a Thank-You"
+title: "Part 5 - My Journey"
 header:
   overlay_image: /assets/images/hero-ember.svg
   overlay_filter: 0.5
@@ -8,7 +8,7 @@ sidebar:
   nav: "ignis"
 ---
 
-*Part 5. The trail told as a trail - the false starts, the crashes, the times MAX was already standing where I thought the frontier was - then the verdict, and a real thank-you to the people building this.*
+*Part 5. The trail told as a trail - the false starts, the crashes, the times MAX was already standing where I thought the frontier was - and then the verdict.*
 
 ## How I ended up here
 
@@ -22,7 +22,7 @@ I came back to it after watching antirez build [`ds4`](https://github.com/antire
 
 The dev log reads as a sequence of "I assumed X; the runtime taught me Y."
 
-**Getting in-process at all** was the first wall, and it was two walls stacked. Driving MAX from a program launched with `mojo run` crashes during model init - `M::Context with different Init::Options` - because the JIT runtime and MAX disagree on the one process-global context. Build the binary and run it, and the context comes up compatibly. Then the obvious entry point, `max.entrypoints.llm.LLM`, fails a second way: it mirrors the serving topology and spawns a worker subprocess, and `spawn` re-execs Python looking for a `__main__` an embedded interpreter doesn't have. The path that works is the lower-level `PIPELINE_REGISTRY.retrieve(...)` + `generate_async(...)`, which runs the model inline - more in-process, and portable to Mojo's embedded interpreter. Both failures live at the seam between Mojo's runtime, an embedded CPython, and MAX's process model. The compiler can't flag them and the docs didn't cover them. You find them by crashing and bisecting.
+**Getting in-process at all** was the first wall, and it stopped me twice before it gave - two separate failures, back to back. Driving MAX from a program launched with `mojo run` crashes during model init - `M::Context with different Init::Options` - because the JIT runtime and MAX disagree on the one process-global context. Build the binary and run it, and the context comes up compatibly. Then the obvious entry point, `max.entrypoints.llm.LLM`, fails a second way: it mirrors the serving topology and spawns a worker subprocess, and `spawn` re-execs Python looking for a `__main__` an embedded interpreter doesn't have. The path that works is the lower-level `PIPELINE_REGISTRY.retrieve(...)` + `generate_async(...)`, which runs the model inline - more in-process, and portable to Mojo's embedded interpreter. Both failures live at the seam between Mojo's runtime, an embedded CPython, and MAX's process model. The compiler can't flag them and the docs didn't cover them. You find them by crashing and bisecting.
 
 **Real metrics** came next. The harness during development fabricated cache numbers - `cached_chars = prompt_chars - 160`, fake `checkpoint_saved` / `.kvmeta` events. I wired in MAX's `num_cached_tokens`, which behaves like a real systems number: page-granular, growing `0 → 128 → 256` as the conversation extends, always `<= prompt_tokens`. Logging it unmodified - never rounding up to imply more reuse - became a project rule.
 
@@ -38,9 +38,11 @@ The dev log reads as a sequence of "I assumed X; the runtime taught me Y."
 
 ## The verdict
 
-For what I built - a compiled, deterministic control plane running in-process with MAX - Mojo at 1.0 beta is ready enough to ship. If your problem is a state machine near a model, Mojo is a credible choice today. For a drop-in replacement of a batteries-included Python application, it isn't, and there's no use pretending: no stdlib JSON, a young service ecosystem, the constant pull toward interop. The ecosystem is three years old.
+For what I built - a compiled, deterministic control plane running in-process with MAX - Mojo at 1.0 beta is ready enough to ship. If your problem is a state machine near a model, Mojo is a credible choice today. For a drop-in replacement of a batteries-included Python application, it isn't, and there's no use pretending: it's a young ecosystem.
 
-And the second wall, drawn precisely, because getting its location right is what matters. Ignis shares a runtime with the model in-process, but CPython is still the orchestrator - it loads the model, builds the request, runs the sampling loop. The custom op shows the wall isn't where you'd guess: compiled Mojo *can* reach into the model's compute. What remains is narrower than "Mojo can't touch the model" - it's that the orchestration API is Python, with no Mojo-native way to load Qwen3 and drive `generate`. I will wait for that door to open, but publishing what I could do best today. I'd rather ship the working in-process slice - compiled Mojo in the decode loop, load-bearing Mojo SIMD in the retrieval path - with a clear map of where the wall sits. The repo marks how far the road goes today, with plenty of it still ahead.
+And the second wall - the boundary between compiled Mojo and the Python that still orchestrates the model - is worth drawing precisely, because getting its location right is what matters. Ignis shares a runtime with the model in-process, but CPython is still the orchestrator - it loads the model, builds the request, runs the sampling loop. The custom op shows the wall isn't where you'd guess: compiled Mojo *can* reach into the model's compute. What remains is narrower than "Mojo can't touch the model" - it's that the orchestration API is Python, with no Mojo-native way to load Qwen3 and drive `generate`. 
+
+While I wait for that door to open, I am publishing what I could do best today. I'd rather put out the working in-process slice - compiled Mojo in the decode loop, load-bearing Mojo SIMD in the retrieval path - with a clear map of where the wall sits. The repo marks how far the road goes today, with plenty of it still ahead.
 
 ---
 
