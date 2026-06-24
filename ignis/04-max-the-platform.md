@@ -74,20 +74,23 @@ This is the seam Ignis crosses from Mojo via `std.python`. It's "more in-process
 
 You install it with `pip install modular` (the `max` CLI) or run a sub-1 GB Docker container. The thing to notice: nearly every bullet there is a primitive [Part 2](./02-what-was-achieved.md) found *already built* - which is precisely why the harness's job turned out to be **binding** these primitives together; the hard inference work was already built.
 
-## Is there a MAX from NVIDIA?
+## Is there a MAX from NVIDIA or AMD?
 
-A colleague, watching me wire Mojo into the in-process pipeline, asked the obvious question: isn't there already an equivalent from NVIDIA, or anyone? The answer depends on *which layer* you mean - no single product covers all four.
+A colleague, watching me wire Mojo into the in-process pipeline, asked the obvious question: isn't there already an equivalent from NVIDIA, AMD, or anyone? The answer depends on *which layer* you mean - no single product covers all four.
 
-**NVIDIA's stack** is the closest single-vendor analog, and philosophically the *opposite* of MAX (deep CUDA lock-in for peak perf, not portability):
+**The short version:** NVIDIA has the closest answer, but it is vendor-locked. AMD has many of the ingredients, but not a single MAX-like platform.
 
-| MAX layer | NVIDIA equivalent |
-|---|---|
-| Graph compiler / engine | **TensorRT** (op fusion, kernel selection, quantization) |
-| LLM pipeline (paged KV, in-flight batching, FP8/INT4, spec decode) | **TensorRT-LLM** - the closest analog to `max.pipelines` |
-| Serving (`max serve`, OpenAI API) | **Triton Inference Server**¹ + **NIM** (containerized, OpenAI-compatible endpoints) |
-| Mojo custom ops | **CUDA C++ / CUTLASS / cuDNN**, or **Triton**¹ (the kernel *language*) |
+| MAX layer | NVIDIA answer | AMD answer |
+|---|---|---|
+| Integrated inference platform | Closest: **TensorRT + TensorRT-LLM + NIM/Triton + CUDA** | No single equivalent: **ROCm + MIGraphX + vLLM/SGLang/TGI + HIP/CK** |
+| Graph compiler / engine | **TensorRT** | **MIGraphX** / Torch-MIGraphX |
+| LLM runtime / pipeline | **TensorRT-LLM** | **vLLM**, **SGLang**, **TGI** on ROCm |
+| Serving / OpenAI-compatible endpoint | **NIM**, Triton Inference Server, TensorRT-LLM server | vLLM/SGLang/TGI servers on ROCm |
+| Custom ops / kernel authoring | **CUDA C++**, CUTLASS, cuDNN, Triton language | **HIP C++**, Composable Kernel, rocBLAS/MIOpen, Triton-on-ROCm |
+| Portability story | NVIDIA-first, CUDA-centered | AMD-first, ROCm-centered |
+| Does it answer MAX? | Closest answer, but NVIDIA-first | Parts, not a MAX-shaped product |
 
-¹ Two different "Tritons": **Triton Inference Server** (NVIDIA, serving) vs **Triton** (OpenAI, a Python-embedded GPU-kernel DSL). The latter is the nearest cousin to *Mojo as a kernel language* - though Triton is a DSL, not a full systems language.
+Triton appears twice here: **Triton Inference Server** is NVIDIA's serving system; **Triton** the kernel language is the Python-embedded GPU DSL often compared with Mojo. The point of the table is not that NVIDIA or AMD lack the pieces. It is that MAX turns stack assembly into one product surface: the graph compiler is not just an export step, serving is not a separate deployment layer, the LLM scheduler primitives are available directly, and custom kernel work fits into the same mental model. On AMD especially, the equivalent path is assembled from framework, ROCm, compiler, and kernel libraries. MAX packages those scattered layers under one portable compiler/runtime/serving/kernel stack.
 
 **The vendor-neutral engines** are arguably MAX's *most direct* functional rivals for what Ignis uses it for - in-process inference with paged/prefix-cached KV:
 
@@ -101,7 +104,7 @@ A colleague, watching me wire Mojo into the in-process pipeline, asked the obvio
 - the compiler/portability ambition → **IREE / TVM / OpenXLA**;
 - Mojo-as-kernel-language inside a portable runtime → **no true peer.** A full systems language that also targets accelerators is Modular's genuinely unusual bet.
 
-There's no "MAX from NVIDIA" because MAX's whole identity is the refusal to be from one vendor - fusing compiler, portable runtime, kernel language, and serving into one stack. Which is exactly why it's the right substrate for an experiment about proximity.
+There isn't a clean "MAX from NVIDIA" or "MAX from AMD" because MAX's whole identity is the refusal to be from one vendor - fusing compiler, portable runtime, kernel language, and serving into one stack. Which is exactly why it's the right substrate for an experiment about proximity.
 
 ## What MAX gave Ignis
 
