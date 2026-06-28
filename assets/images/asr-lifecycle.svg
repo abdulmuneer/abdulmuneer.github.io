@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 860" width="1600" height="860" font-family="Inter, Arial, Helvetica, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F8FCFD"/>
+      <stop offset="1" stop-color="#EEF4F8"/>
+    </linearGradient>
+    <linearGradient id="pass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E9F8F0"/>
+      <stop offset="1" stop-color="#D8F0E4"/>
+    </linearGradient>
+    <linearGradient id="extract" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF0DE"/>
+      <stop offset="1" stop-color="#FFE1BF"/>
+    </linearGradient>
+    <linearGradient id="cutoff" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FCEAE6"/>
+      <stop offset="1" stop-color="#F6C9C0"/>
+    </linearGradient>
+    <linearGradient id="decision" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0E5F6C"/>
+      <stop offset="1" stop-color="#174A52"/>
+    </linearGradient>
+    <linearGradient id="footer" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F8FBFD"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#6B7F88"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#0E5F6C"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0B1D25" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="860" fill="url(#bg)"/>
+  <rect x="28" y="28" width="1544" height="804" rx="28" fill="none" stroke="#D5E2EA" stroke-width="2"/>
+
+  <text x="72" y="70" font-size="30" font-weight="700" fill="#12333B">Target speaker following live path</text>
+  <text x="72" y="102" font-size="17" fill="#5B6E78">Route clean target speech, extract recoverable overlap, and cut off unusable audio before ASR.</text>
+
+  <!-- top pipeline -->
+  <g font-size="19" font-weight="600" fill="#18323A">
+    <rect x="70" y="150" width="220" height="92" rx="18" fill="#FFFFFF" stroke="#D1DCE3" stroke-width="2" filter="url(#shadow)"/>
+    <text x="180" y="186" text-anchor="middle">
+      <tspan x="180" dy="0">client audio</tspan>
+      <tspan x="180" dy="23">chunk</tspan>
+    </text>
+
+    <rect x="320" y="150" width="220" height="92" rx="18" fill="#FFFFFF" stroke="#D1DCE3" stroke-width="2" filter="url(#shadow)"/>
+    <text x="430" y="182" text-anchor="middle">
+      <tspan x="430" dy="0">decode to</tspan>
+      <tspan x="430" dy="23">canonical PCM</tspan>
+    </text>
+
+    <rect x="570" y="150" width="220" height="92" rx="18" fill="#FFFFFF" stroke="#D1DCE3" stroke-width="2" filter="url(#shadow)"/>
+    <text x="680" y="186" text-anchor="middle">
+      <tspan x="680" dy="0">VAD speech</tspan>
+      <tspan x="680" dy="23">windows</tspan>
+    </text>
+
+    <rect x="820" y="150" width="220" height="92" rx="18" fill="#FFFFFF" stroke="#D1DCE3" stroke-width="2" filter="url(#shadow)"/>
+    <text x="930" y="182" text-anchor="middle">
+      <tspan x="930" dy="0">acquire or update</tspan>
+      <tspan x="930" dy="23">target profile</tspan>
+    </text>
+
+    <rect x="1070" y="150" width="220" height="92" rx="18" fill="#FFFFFF" stroke="#D1DCE3" stroke-width="2" filter="url(#shadow)"/>
+    <text x="1180" y="182" text-anchor="middle">
+      <tspan x="1180" dy="0">score cheap</tspan>
+      <tspan x="1180" dy="23">evidence</tspan>
+    </text>
+
+    <rect x="1320" y="150" width="210" height="92" rx="18" fill="url(#decision)" stroke="#0E5F6C" stroke-width="2" filter="url(#shadow)"/>
+    <text x="1425" y="182" text-anchor="middle" fill="#FFFFFF">
+      <tspan x="1425" dy="0">route decision</tspan>
+      <tspan x="1425" dy="24" font-size="15" font-weight="500">pass / extract / cutoff</tspan>
+    </text>
+  </g>
+
+  <g stroke="#6F838B" stroke-width="3" fill="none" marker-end="url(#arrow)">
+    <line x1="290" y1="196" x2="320" y2="196"/>
+    <line x1="540" y1="196" x2="570" y2="196"/>
+    <line x1="790" y1="196" x2="820" y2="196"/>
+    <line x1="1040" y1="196" x2="1070" y2="196"/>
+    <line x1="1290" y1="196" x2="1320" y2="196"/>
+  </g>
+
+  <!-- branch cards -->
+  <g font-size="19" font-weight="600" fill="#18323A">
+    <rect x="70" y="320" width="420" height="148" rx="18" fill="url(#pass)" stroke="#B9DCC7" stroke-width="2" filter="url(#shadow)"/>
+    <text x="280" y="360" text-anchor="middle" fill="#1C5B3D">
+      <tspan x="280" dy="0" font-size="24" font-weight="700">PASS_THROUGH</tspan>
+      <tspan x="280" dy="28" font-size="18" font-weight="600" fill="#254F3A">clean, dominant target</tspan>
+      <tspan x="280" dy="24" font-size="18" font-weight="600" fill="#254F3A">ASR(raw)</tspan>
+    </text>
+
+    <rect x="590" y="320" width="420" height="148" rx="18" fill="url(#extract)" stroke="#E8CBA2" stroke-width="2" filter="url(#shadow)"/>
+    <text x="800" y="360" text-anchor="middle" fill="#8A5400">
+      <tspan x="800" dy="0" font-size="24" font-weight="700">EXTRACT</tspan>
+      <tspan x="800" dy="28" font-size="18" font-weight="600" fill="#7B5934">recoverable overlap</tspan>
+      <tspan x="800" dy="24" font-size="18" font-weight="600" fill="#7B5934">TSE /route -> ASR(extracted)</tspan>
+    </text>
+
+    <rect x="1110" y="320" width="420" height="148" rx="18" fill="url(#cutoff)" stroke="#E3B4AB" stroke-width="2" filter="url(#shadow)"/>
+    <text x="1320" y="360" text-anchor="middle" fill="#9B3028">
+      <tspan x="1320" dy="0" font-size="24" font-weight="700">CUTOFF</tspan>
+      <tspan x="1320" dy="28" font-size="18" font-weight="600" fill="#7F443D">no usable target</tspan>
+      <tspan x="1320" dy="24" font-size="18" font-weight="600" fill="#7F443D">terminal skip event</tspan>
+    </text>
+  </g>
+
+  <g stroke="#A0B0B8" stroke-width="3" fill="none" marker-end="url(#arrow)">
+    <line x1="280" y1="468" x2="280" y2="540"/>
+    <line x1="800" y1="468" x2="800" y2="540"/>
+    <line x1="1320" y1="468" x2="1320" y2="540"/>
+  </g>
+
+  <rect x="360" y="540" width="880" height="88" rx="18" fill="url(#footer)" stroke="#D1DCE3" stroke-width="2" filter="url(#shadow)"/>
+  <text x="800" y="575" text-anchor="middle" font-size="23" font-weight="700" fill="#17323B">one terminal chunk event</text>
+  <text x="800" y="603" text-anchor="middle" font-size="17" fill="#5B6E78">aggregate per-window results, then update counters, state, and metrics</text>
+
+  <g stroke="#6B7F88" stroke-width="3" fill="none" marker-end="url(#arrow-teal)">
+    <line x1="800" y1="628" x2="800" y2="702"/>
+  </g>
+
+  <rect x="300" y="702" width="1000" height="88" rx="18" fill="#FFFFFF" stroke="#BFD0D8" stroke-width="2" filter="url(#shadow)"/>
+  <text x="800" y="738" text-anchor="middle" font-size="22" font-weight="700" fill="#17323B">update counters, state, metrics</text>
+  <text x="800" y="766" text-anchor="middle" font-size="17" fill="#5B6E78">session affinity, release, observability, and rollback all happen here</text>
+</svg>

@@ -1,6 +1,8 @@
 main:
   - title: "Home"
     url: /
+  - title: "ASR Series"
+    url: /asr/
   - title: "Ignis Series"
     url: /ignis/
   - title: "GitHub"
@@ -23,3 +25,11 @@ ignis:
         url: /ignis/04-max-the-platform.html
       - title: "Part 5 - My Journey"
         url: /ignis/05-the-journey.html
+
+asr:
+  - title: "ASR Systems"
+    children:
+      - title: "Overview"
+        url: /asr/
+      - title: "Part 0 - Target Speaker Following"
+        url: /asr/target-speaker-following/

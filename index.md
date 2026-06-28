@@ -8,7 +8,16 @@ header:
   actions:
     - label: "Read the Ignis series"
       url: /ignis/
+    - label: "Read the ASR series"
+      url: /asr/
 feature_row:
+  - image_path: /assets/images/hero-asr.svg
+    alt: "ASR Systems"
+    title: "ASR Systems"
+    excerpt: "A technical series on the engineering around speech recognition: target speaker following, streaming control flow, routing, evaluation, rollout, and privacy boundaries. Part 0 starts with how to keep ASR focused on the voice you actually meant to transcribe."
+    url: /asr/
+    btn_label: "Read the series"
+    btn_class: "btn--primary"
   - image_path: /assets/images/hero-mojo.svg
     alt: "Ignis - Finding Your Mojo from DwarfStar"
     title: "Ignis - Finding Your Mojo from DwarfStar"
