@@ -1,9 +1,12 @@
 ---
 title: "Tuning Voice Activity Detection for ASR Gating"
 header:
-  overlay_image: /assets/images/hero-ember.svg
+  overlay_image: /assets/images/hero-asr.svg
   overlay_filter: 0.5
-  teaser: /assets/images/hero-ember.svg
+  teaser: /assets/images/hero-asr.svg
+sidebar:
+  nav: "asr"
+toc: true
 ---
 
 *VAD post-processing defaults are set for general use, not for gating an ASR

@@ -8,12 +8,21 @@ header:
   actions:
     - label: "Read the Ignis series"
       url: /ignis/
+    - label: "Read the ASR series"
+      url: /asr/
 feature_row:
   - image_path: /assets/images/hero-mojo.svg
     alt: "Ignis - Finding Your Mojo from DwarfStar"
     title: "Ignis - Finding Your Mojo from DwarfStar"
     excerpt: "A six-part expedition into **Ignis**, a Mojo-native agent harness that runs a MAX-served LLM in the *same OS process* as the control plane. An honest account of what Mojo and MAX actually do at the 1.0-beta frontier - from building a real program on them. *(New to Mojo or MAX? Two parts open with from-scratch primers.)*"
     url: /ignis/
+    btn_label: "Read the series"
+    btn_class: "btn--primary"
+  - image_path: /assets/images/hero-asr.svg
+    alt: "ASR - Notes from Building Speech-to-Text"
+    title: "ASR - Notes from Building Speech-to-Text"
+    excerpt: "Field notes from building and tuning **automatic speech recognition** pipelines - the components around the model and the trade-offs that decide quality in practice. First up: *tuning voice-activity detection*, using Silero VAD and FunASR's FSMN-VAD as worked examples."
+    url: /asr/
     btn_label: "Read the series"
     btn_class: "btn--primary"
 ---

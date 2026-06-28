@@ -3,8 +3,18 @@ main:
     url: /
   - title: "Ignis Series"
     url: /ignis/
+  - title: "ASR Series"
+    url: /asr/
   - title: "GitHub"
     url: https://github.com/abdulmuneer
+
+asr:
+  - title: "ASR - Notes from Building Speech-to-Text"
+    children:
+      - title: "Overview"
+        url: /asr/
+      - title: "Tuning Voice Activity Detection for ASR Gating"
+        url: /asr/tuning-vad-for-asr.html
 
 ignis:
   - title: "Ignis - Finding Your Mojo from DwarfStar"
