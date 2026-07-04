@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" width="1600" height="500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3E4A16"/>
+      <stop offset="0.55" stop-color="#9E8420"/>
+      <stop offset="1" stop-color="#E7CC55"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="500" fill="url(#g)"/>
+  <g fill="#F7EFCF" opacity="0.06">
+    <circle cx="230" cy="120" r="70"/>
+    <circle cx="380" cy="78" r="22"/>
+  </g>
+  <!-- compounding: exponential rise that bends into a bounded plateau -->
+  <path d="M440 380 C 700 375, 800 360, 900 250 S 1030 120, 1200 118 L 1200 118" fill="none" stroke="#F7EFCF" opacity="0.9" stroke-width="5" stroke-linecap="round"/>
+  <line x1="900" y1="118" x2="1220" y2="118" stroke="#F7EFCF" opacity="0.4" stroke-width="2" stroke-dasharray="8 10"/>
+  <g fill="#F7EFCF" opacity="0.5">
+    <circle cx="560" cy="365" r="6"/>
+    <circle cx="660" cy="350" r="6"/>
+    <circle cx="770" cy="315" r="6"/>
+    <circle cx="850" cy="255" r="6"/>
+    <circle cx="930" cy="190" r="6"/>
+    <circle cx="1030" cy="140" r="6"/>
+    <circle cx="1150" cy="120" r="6"/>
+  </g>
+  <circle cx="1200" cy="118" r="9" fill="#F7EFCF" opacity="0.9"/>
+  <g stroke="#F7EFCF" opacity="0.09" stroke-width="2" fill="none">
+    <path d="M0 430 C 300 380, 600 470, 900 410 S 1500 360, 1600 420"/>
+  </g>
+</svg>

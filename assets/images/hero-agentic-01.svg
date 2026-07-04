@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" width="1600" height="500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#142033"/>
+      <stop offset="0.55" stop-color="#8A6A2A"/>
+      <stop offset="1" stop-color="#D8AE52"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="500" fill="url(#g)"/>
+  <g fill="#F5EAD0" opacity="0.06">
+    <circle cx="230" cy="120" r="70"/>
+    <circle cx="380" cy="78" r="22"/>
+  </g>
+  <!-- the loop: goal -> context -> plan -> change -> verify -> gate, cycling -->
+  <g fill="none" stroke="#F5EAD0" stroke-linecap="round">
+    <circle cx="800" cy="250" r="150" opacity="0.85" stroke-width="4" stroke-dasharray="6 40"/>
+    <path d="M800 100 A150 150 0 1 1 660 155" opacity="0.9" stroke-width="5"/>
+  </g>
+  <polygon points="660,132 692,150 654,178" fill="#F5EAD0" opacity="0.9"/>
+  <g fill="#F5EAD0" opacity="0.85">
+    <circle cx="800" cy="100" r="9"/>
+    <circle cx="930" cy="175" r="9"/>
+    <circle cx="930" cy="325" r="9"/>
+    <circle cx="800" cy="400" r="9"/>
+    <circle cx="670" cy="325" r="9"/>
+  </g>
+  <line x1="1010" y1="170" x2="1010" y2="330" stroke="#F5EAD0" opacity="0.9" stroke-width="4"/>
+  <g stroke="#F5EAD0" opacity="0.5" stroke-width="3" stroke-linecap="round">
+    <line x1="1050" y1="240" x2="1130" y2="240"/>
+    <line x1="1050" y1="260" x2="1110" y2="260"/>
+  </g>
+  <polygon points="1130,232 1150,240 1130,248" fill="#F5EAD0" opacity="0.6"/>
+  <g stroke="#F5EAD0" opacity="0.09" stroke-width="2" fill="none">
+    <path d="M0 430 C 300 380, 600 470, 900 410 S 1500 360, 1600 420"/>
+  </g>
+</svg>

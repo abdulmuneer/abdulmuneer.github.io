@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" width="1600" height="500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1B2A4A"/>
+      <stop offset="0.55" stop-color="#7C5B2E"/>
+      <stop offset="1" stop-color="#E4B54A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="500" fill="url(#g)"/>
+  <g fill="#F7ECCF" opacity="0.06">
+    <circle cx="220" cy="120" r="74"/>
+    <circle cx="368" cy="74" r="24"/>
+  </g>
+  <!-- orchestration graph: one hub steering a set of agent nodes -->
+  <g stroke="#F7ECCF" fill="none" opacity="0.24" stroke-width="2">
+    <line x1="800" y1="250" x2="560" y2="150"/>
+    <line x1="800" y1="250" x2="600" y2="360"/>
+    <line x1="800" y1="250" x2="1000" y2="140"/>
+    <line x1="800" y1="250" x2="1040" y2="340"/>
+    <line x1="800" y1="250" x2="1180" y2="230"/>
+    <line x1="800" y1="250" x2="470" y2="270"/>
+  </g>
+  <g fill="#F7ECCF">
+    <circle cx="800" cy="250" r="20" opacity="0.92"/>
+    <circle cx="560" cy="150" r="10" opacity="0.6"/>
+    <circle cx="600" cy="360" r="10" opacity="0.6"/>
+    <circle cx="1000" cy="140" r="10" opacity="0.6"/>
+    <circle cx="1040" cy="340" r="10" opacity="0.6"/>
+    <circle cx="1180" cy="230" r="10" opacity="0.6"/>
+    <circle cx="470" cy="270" r="10" opacity="0.6"/>
+  </g>
+  <circle cx="800" cy="250" r="40" fill="none" stroke="#F7ECCF" opacity="0.32" stroke-width="2"/>
+  <g stroke="#F7ECCF" opacity="0.09" stroke-width="2" fill="none">
+    <path d="M0 430 C 300 380, 600 470, 900 410 S 1500 360, 1600 420"/>
+  </g>
+</svg>

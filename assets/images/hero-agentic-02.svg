@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" width="1600" height="500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#241708"/>
+      <stop offset="0.55" stop-color="#7A5426"/>
+      <stop offset="1" stop-color="#C9A063"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="500" fill="url(#g)"/>
+  <g fill="#F3E6C8" opacity="0.06">
+    <circle cx="230" cy="120" r="70"/>
+    <circle cx="380" cy="78" r="22"/>
+  </g>
+  <!-- comb-shaped profile: broad shallow literacy across, two deep spikes -->
+  <line x1="470" y1="250" x2="1150" y2="250" stroke="#F3E6C8" opacity="0.85" stroke-width="4" stroke-linecap="round"/>
+  <g stroke="#F3E6C8" opacity="0.35" stroke-width="7" stroke-linecap="round">
+    <line x1="510" y1="250" x2="510" y2="305"/>
+    <line x1="590" y1="250" x2="590" y2="300"/>
+    <line x1="750" y1="250" x2="750" y2="308"/>
+    <line x1="830" y1="250" x2="830" y2="298"/>
+    <line x1="990" y1="250" x2="990" y2="306"/>
+    <line x1="1110" y1="250" x2="1110" y2="300"/>
+  </g>
+  <g stroke="#F3E6C8" opacity="0.92" stroke-width="10" stroke-linecap="round">
+    <line x1="670" y1="250" x2="670" y2="410"/>
+    <line x1="910" y1="250" x2="910" y2="390"/>
+  </g>
+  <g fill="#F3E6C8" opacity="0.92">
+    <circle cx="670" cy="410" r="8"/>
+    <circle cx="910" cy="390" r="8"/>
+  </g>
+  <g stroke="#F3E6C8" opacity="0.09" stroke-width="2" fill="none">
+    <path d="M0 430 C 300 380, 600 470, 900 410 S 1500 360, 1600 420"/>
+  </g>
+</svg>

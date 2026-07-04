@@ -1,12 +1,30 @@
 main:
   - title: "Home"
     url: /
+  - title: "Agentic Engineering"
+    url: /agentic-engineering/
   - title: "Ignis Series"
     url: /ignis/
   - title: "ASR Series"
     url: /asr/
   - title: "GitHub"
     url: https://github.com/abdulmuneer
+
+agentic:
+  - title: "The Future of Agentic Engineering"
+    children:
+      - title: "Overview"
+        url: /agentic-engineering/
+      - title: "Part 1 - Principles and Methodologies"
+        url: /agentic-engineering/01-principles-and-methodologies.html
+      - title: "Part 2 - Human Skill Changes"
+        url: /agentic-engineering/02-human-skill-changes.html
+      - title: "Part 3 - Cadence and Mental Discipline"
+        url: /agentic-engineering/03-cadence-and-mental-discipline.html
+      - title: "Part 4 - Compounding and Equilibrium"
+        url: /agentic-engineering/04-compounding-and-equilibrium.html
+      - title: "Part 5 - Wellbeing, Sustainability, and Education"
+        url: /agentic-engineering/05-wellbeing-and-education.html
 
 asr:
   - title: "ASR - Notes from Building Speech-to-Text"

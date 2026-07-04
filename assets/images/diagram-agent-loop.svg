@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 290" width="900" height="290" font-family="'Space Grotesk','Inter',sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#7a6238"/></marker>
+    <marker id="arfb" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#a06a26"/></marker>
+    <style>
+      .t{fill:#fff;text-anchor:middle;font-weight:600;}
+      .e{fill:none;stroke:#7a6238;stroke-width:2.2;}
+      .fb{fill:none;stroke:#a06a26;stroke-width:2.2;stroke-dasharray:6 5;}
+    </style>
+  </defs>
+
+  <!-- edges -->
+  <path class="e" d="M122,90 L152,90" marker-end="url(#ar)"/>
+  <path class="e" d="M294,90 L314,90" marker-end="url(#ar)"/>
+  <path class="e" d="M402,90 L428,90" marker-end="url(#ar)"/>
+  <path class="e" d="M528,90 L548,90" marker-end="url(#ar)"/>
+  <path class="e" d="M648,90 L691,90" marker-end="url(#ar)"/>
+  <path class="e" d="M770,144 L770,207" marker-end="url(#ar)"/>
+  <path class="fb" d="M770,36 C 770,8 300,8 225,64" marker-end="url(#arfb)"/>
+
+  <text x="786" y="182" font-size="12" fill="#3f6a2e" font-weight="600">Yes</text>
+  <text x="497" y="12" font-size="12" fill="#a06a26" font-weight="600">No</text>
+
+  <!-- nodes -->
+  <rect x="38" y="66" width="84" height="48" rx="24" fill="#B5822E" stroke="#8a6320" stroke-width="1.5"/>
+  <text class="t" x="80" y="95" font-size="14">Goal</text>
+
+  <rect x="156" y="66" width="138" height="48" rx="11" fill="#2C5A7A" stroke="#1f4258" stroke-width="1.5"/>
+  <text class="t" x="225" y="86" font-size="13">Context</text>
+  <text class="t" x="225" y="104" font-size="13">Gathering</text>
+
+  <rect x="318" y="66" width="84" height="48" rx="11" fill="#2C5A7A" stroke="#1f4258" stroke-width="1.5"/>
+  <text class="t" x="360" y="95" font-size="14">Plan</text>
+
+  <rect x="432" y="66" width="96" height="48" rx="11" fill="#2C5A7A" stroke="#1f4258" stroke-width="1.5"/>
+  <text class="t" x="480" y="95" font-size="14">Change</text>
+
+  <rect x="552" y="66" width="96" height="48" rx="11" fill="#2C5A7A" stroke="#1f4258" stroke-width="1.5"/>
+  <text class="t" x="600" y="95" font-size="14">Verify</text>
+
+  <polygon points="770,36 845,90 770,144 695,90" fill="#24406B" stroke="#E4B54A" stroke-width="2.4"/>
+  <text class="t" x="770" y="86" font-size="12.5">Evidence</text>
+  <text class="t" x="770" y="103" font-size="12.5">good enough?</text>
+
+  <rect x="686" y="211" width="168" height="48" rx="24" fill="#B5822E" stroke="#8a6320" stroke-width="1.5"/>
+  <text class="t" x="770" y="240" font-size="14">Human Review / Merge</text>
+</svg>

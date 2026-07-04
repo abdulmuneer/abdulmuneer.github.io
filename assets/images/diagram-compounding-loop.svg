@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" width="920" height="360" font-family="'Space Grotesk','Inter',sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#6f5a1f"/></marker>
+    <marker id="arfb" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#8a6a1a"/></marker>
+    <style>
+      .t{fill:#fff;text-anchor:middle;font-weight:600;}
+      .e{fill:none;stroke:#6f5a1f;stroke-width:2.2;}
+      .fb{fill:none;stroke:#8a6a1a;stroke-width:2.2;stroke-dasharray:6 5;}
+    </style>
+  </defs>
+
+  <!-- edges -->
+  <path class="e" d="M205,90 L251,90" marker-end="url(#ar)"/>
+  <path class="e" d="M425,90 L471,90" marker-end="url(#ar)"/>
+  <path class="e" d="M645,90 L696,90" marker-end="url(#ar)"/>
+  <path class="e" d="M790,116 L790,250" marker-end="url(#ar)"/>
+  <path class="e" d="M715,280 L624,280" marker-end="url(#ar)"/>
+  <path class="e" d="M420,280 L342,280" marker-end="url(#ar)"/>
+  <path class="fb" d="M250,254 C 258,176 302,150 336,120" marker-end="url(#arfb)"/>
+  <text x="205" y="188" font-size="11" fill="#8a6a1a" font-weight="600" text-anchor="middle">compounds</text>
+
+  <!-- nodes -->
+  <rect x="35" y="64" width="170" height="52" rx="26" fill="#A8861F" stroke="#836615" stroke-width="1.5"/>
+  <text class="t" x="120" y="94" font-size="14">Human goal</text>
+
+  <rect x="255" y="64" width="170" height="52" rx="11" fill="#4E6B2A" stroke="#3a5120" stroke-width="1.5"/>
+  <text class="t" x="340" y="94" font-size="14">Agent loop</text>
+
+  <rect x="475" y="64" width="170" height="52" rx="11" fill="#7A5A2A" stroke="#5d451f" stroke-width="1.5"/>
+  <text class="t" x="560" y="94" font-size="14">Code / artifact</text>
+
+  <rect x="700" y="64" width="180" height="52" rx="11" fill="#7A5A2A" stroke="#5d451f" stroke-width="1.5"/>
+  <text class="t" x="790" y="86" font-size="13">Verification</text>
+  <text class="t" x="790" y="104" font-size="13">evidence</text>
+
+  <rect x="715" y="254" width="150" height="52" rx="11" fill="#4E6B2A" stroke="#3a5120" stroke-width="1.5"/>
+  <text class="t" x="790" y="285" font-size="14">Learning</text>
+
+  <rect x="420" y="254" width="200" height="52" rx="11" fill="#A8861F" stroke="#836615" stroke-width="1.5"/>
+  <text class="t" x="520" y="277" font-size="12.5">Tests, skills, docs,</text>
+  <text class="t" x="520" y="294" font-size="12.5">tools, patterns</text>
+
+  <rect x="162" y="254" width="176" height="52" rx="11" fill="#A8861F" stroke="#836615" stroke-width="1.5"/>
+  <text class="t" x="250" y="277" font-size="13">Better future</text>
+  <text class="t" x="250" y="294" font-size="13">context</text>
+</svg>

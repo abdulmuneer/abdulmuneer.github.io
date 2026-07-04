@@ -6,11 +6,20 @@ header:
   overlay_image: /assets/images/hero-ember.svg
   overlay_filter: 0.45
   actions:
+    - label: "Read the Agentic Engineering series"
+      url: /agentic-engineering/
     - label: "Read the Ignis series"
       url: /ignis/
     - label: "Read the ASR series"
       url: /asr/
 feature_row:
+  - image_path: /assets/images/hero-agentic.svg
+    alt: "The Future of Agentic Engineering"
+    title: "The Future of Agentic Engineering"
+    excerpt: "A five-part series on where software work heads as coding agents become a daily tool. From eighteen years building software and nine across the AI stack: the durable principles that stay fixed, the methods that become executable loops, and the human shift from writing code to **steering, verifying, and owning** systems of agents."
+    url: /agentic-engineering/
+    btn_label: "Read the series"
+    btn_class: "btn--primary"
   - image_path: /assets/images/hero-mojo.svg
     alt: "Ignis - Finding Your Mojo from DwarfStar"
     title: "Ignis - Finding Your Mojo from DwarfStar"

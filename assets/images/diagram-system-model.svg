@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 380" width="1000" height="380" font-family="'Space Grotesk','Inter',sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#7a6238"/></marker>
+    <marker id="arfb" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#a06a26"/></marker>
+    <style>
+      .t{fill:#fff;text-anchor:middle;font-weight:600;}
+      .e{fill:none;stroke:#7a6238;stroke-width:2.2;}
+      .fb{fill:none;stroke:#a06a26;stroke-width:2.2;stroke-dasharray:6 5;}
+    </style>
+  </defs>
+
+  <!-- edges -->
+  <path class="e" d="M196,204 L250,126" marker-end="url(#ar)"/>
+  <path class="e" d="M428,110 L490,98" marker-end="url(#ar)"/>
+  <path class="e" d="M688,100 L758,117" marker-end="url(#ar)"/>
+  <path class="e" d="M850,149 L850,285" marker-end="url(#ar)"/>
+  <path class="e" d="M760,320 L432,331" marker-end="url(#ar)"/>
+  <path class="fb" d="M340,301 L340,146" marker-end="url(#arfb)"/>
+  <path class="e" d="M590,125 L590,170" marker-end="url(#ar)"/>
+  <path class="e" d="M590,228 L590,270" marker-end="url(#ar)"/>
+  <path class="fb" d="M680,298 C 772,272 772,150 694,112" marker-end="url(#arfb)"/>
+
+  <!-- feedback edge labels -->
+  <text x="325" y="230" font-size="11" fill="#8a6a2a" text-anchor="end">reuse</text>
+  <text x="775" y="205" font-size="11" fill="#8a6a2a">recover</text>
+
+  <!-- nodes -->
+  <g>
+    <rect x="20" y="183" width="176" height="54" rx="11" fill="#B5822E" stroke="#8a6320" stroke-width="1.5"/>
+    <text class="t" x="108" y="206" font-size="14">Durable</text>
+    <text class="t" x="108" y="224" font-size="14">Principles</text>
+
+    <rect x="252" y="86" width="176" height="54" rx="11" fill="#2C5A7A" stroke="#1f4258" stroke-width="1.5"/>
+    <text class="t" x="340" y="109" font-size="14">Agentic</text>
+    <text class="t" x="340" y="127" font-size="14">Methodologies</text>
+
+    <rect x="492" y="66" width="196" height="58" rx="12" fill="#24406B" stroke="#E4B54A" stroke-width="2.4"/>
+    <text class="t" x="590" y="90" font-size="15">Human</text>
+    <text class="t" x="590" y="109" font-size="15">Orchestration</text>
+
+    <rect x="762" y="93" width="176" height="54" rx="11" fill="#2C5A7A" stroke="#1f4258" stroke-width="1.5"/>
+    <text class="t" x="850" y="116" font-size="14">Bounded</text>
+    <text class="t" x="850" y="134" font-size="14">Agent Loops</text>
+
+    <rect x="762" y="288" width="176" height="54" rx="11" fill="#2E6E78" stroke="#21525a" stroke-width="1.5"/>
+    <text class="t" x="850" y="320" font-size="14">Evidence &amp; Review</text>
+
+    <rect x="252" y="304" width="176" height="54" rx="11" fill="#B5822E" stroke="#8a6320" stroke-width="1.5"/>
+    <text class="t" x="340" y="336" font-size="14">Learning Assets</text>
+
+    <rect x="502" y="173" width="176" height="52" rx="11" fill="#8A6A2A" stroke="#6a5020" stroke-width="1.5"/>
+    <text class="t" x="590" y="204" font-size="14">Cadence Control</text>
+
+    <rect x="502" y="272" width="176" height="52" rx="11" fill="#8A6A2A" stroke="#6a5020" stroke-width="1.5"/>
+    <text class="t" x="590" y="303" font-size="14">Sustained Capacity</text>
+  </g>
+</svg>
