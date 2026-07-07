@@ -272,11 +272,6 @@ workflows.
 That is the executable management of the whole product-development loop, not just
 code generation.
 
-<figure class="align-center">
-  <img src="/assets/images/agentic-manifesto.png" alt="The Agentic Engineering Manifesto: five values, each written as a preferred item over its alternative — accountable orchestration over hands-on execution, bounded agent loops over open-ended autonomy, inspectable evidence over confident output, sustainable cadence over machine speed, and compounding systems over one-off artifacts." title="The Agentic Engineering Manifesto — principles stay, methods change">
-  <figcaption>The series' argument distilled into five values, in the spirit of the Agile Manifesto. Each part that follows takes one of these further.</figcaption>
-</figure>
-
 ## Sources
 
 - [Principles behind the Agile Manifesto](https://agilemanifesto.org/principles.html)

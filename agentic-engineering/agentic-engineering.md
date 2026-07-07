@@ -56,6 +56,11 @@ architecture, engineering, quality, security, release, operations, and learning
 well enough to frame goals, set boundaries, review evidence, and integrate what
 comes back.
 
+<figure class="align-center">
+  <img src="/assets/images/agentic-manifesto.png" alt="The Agentic Engineering Manifesto: five values, each written as a preferred item over its alternative — accountable orchestration over hands-on execution, bounded agent loops over open-ended autonomy, inspectable evidence over confident output, sustainable cadence over machine speed, and compounding systems over one-off artifacts." title="The Agentic Engineering Manifesto — principles stay, methods change">
+  <figcaption>The series in one image, in the spirit of the Agile Manifesto — five values, each a preferred item over its alternative. The five parts below each take one further.</figcaption>
+</figure>
+
 ## The series
 
 - [Part 1 - Principles and Methodologies](./01-principles-and-methodologies.md) - what stays fixed, what becomes executable, and why a writing loop only counts as a slice of the SDLC once it verifies.
