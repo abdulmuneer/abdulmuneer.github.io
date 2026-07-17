@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 780" width="1280" height="780" font-family="'Space Grotesk','Inter',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1L6 4L1 7" fill="none" stroke="#718c92" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .title{fill:#36535b;text-anchor:middle;font-size:18px;font-weight:700;letter-spacing:.5px}
+      .label{fill:#f5fffc;text-anchor:middle;font-size:13px;font-weight:600}
+      .small{fill:#36535b;text-anchor:middle;font-size:12px}
+      .tiny{fill:#f5fffc;text-anchor:middle;font-size:11px;font-weight:500}
+      .teal{fill:#173d49;stroke:#41bba6;stroke-width:2}
+      .orange{fill:#6b4331;stroke:#e58a57;stroke-width:2}
+      .pale{fill:#e7f4f1;stroke:#718c92;stroke-width:2}
+      .flow{fill:none;stroke:#718c92;stroke-width:2.5;marker-end:url(#arrow)}
+      .branch{fill:none;stroke:#718c92;stroke-width:2.5}
+    </style>
+  </defs>
+
+  <rect width="1280" height="780" rx="20" fill="#f5faf9"/>
+  <text class="title" x="640" y="35">RMSNORM COMPILATION PATH</text>
+  <text class="small" x="640" y="57">RMSNorm from torch.compile capture through device launch and validation</text>
+
+  <g>
+    <path class="flow" d="M200 130H230"/>
+    <path class="flow" d="M400 130H430"/>
+    <path class="flow" d="M600 130H630"/>
+    <path class="flow" d="M800 130H830"/>
+    <path class="flow" d="M1000 130H1030"/>
+
+    <rect class="teal" x="35" y="78" width="165" height="106" rx="10"/>
+    <text class="label" x="117" y="106">Python API</text>
+    <text class="tiny" x="117" y="133">norm = nn.RMSNorm(H)</text>
+    <text class="tiny" x="117" y="157">torch.compile(norm)(x)</text>
+
+    <rect class="teal" x="230" y="78" width="170" height="106" rx="10"/>
+    <text class="label" x="315" y="106">Dynamo</text>
+    <text class="tiny" x="315" y="133">FX graph + guards</text>
+    <text class="tiny" x="315" y="157">device, dtype, shape</text>
+
+    <rect class="teal" x="430" y="78" width="170" height="106" rx="10"/>
+    <text class="label" x="515" y="106">FakeTensor</text>
+    <text class="tiny" x="515" y="133">shape, dtype, stride</text>
+    <text class="tiny" x="515" y="157">symbolic dimensions</text>
+
+    <rect class="teal" x="630" y="78" width="170" height="106" rx="10"/>
+    <text class="label" x="715" y="101">Decomposition</text>
+    <text class="tiny" x="715" y="125">cast x to opmath</text>
+    <text class="tiny" x="715" y="146">square, mean, eps, rsqrt</text>
+    <text class="tiny" x="715" y="167">optional weight, cast back</text>
+
+    <rect class="teal" x="830" y="78" width="170" height="106" rx="10"/>
+    <text class="label" x="915" y="106">AOTAutograd</text>
+    <text class="tiny" x="915" y="133">forward graph</text>
+    <text class="tiny" x="915" y="157">backward if training</text>
+
+    <rect class="teal" x="1030" y="78" width="215" height="106" rx="10"/>
+    <text class="label" x="1137" y="106">Inductor plan</text>
+    <text class="tiny" x="1137" y="133">fusion + layout</text>
+    <text class="tiny" x="1137" y="157">schedule + memory</text>
+  </g>
+
+  <path class="flow" d="M1137 184V214H640V236"/>
+  <rect class="pale" x="240" y="236" width="800" height="70" rx="12"/>
+  <text class="title" x="640" y="263" font-size="15">TRANSFORMATION ACCEPTANCE CRITERIA</text>
+  <text class="small" x="425" y="289" font-weight="700">LEGALITY</text>
+  <text class="small" x="640" y="289" font-weight="700">CORRECTNESS</text>
+  <text class="small" x="855" y="289" font-weight="700">PROFITABILITY</text>
+
+  <path class="branch" d="M640 306V342M190 342H1090"/>
+  <path class="flow" d="M190 342V370"/>
+  <path class="flow" d="M640 342V370"/>
+  <path class="flow" d="M1090 342V370"/>
+
+  <g>
+    <rect class="orange" x="50" y="370" width="280" height="110" rx="10"/>
+    <text class="label" x="190" y="401">Triton GPU path</text>
+    <text class="tiny" x="190" y="426">rows, tiles, warps, stages</text>
+    <text class="tiny" x="190" y="447">registers + local memory</text>
+    <text class="tiny" x="190" y="464">target device code</text>
+
+    <rect class="orange" x="500" y="370" width="280" height="110" rx="10"/>
+    <text class="label" x="640" y="401">C++ / OpenMP path</text>
+    <text class="tiny" x="640" y="426">vectors, threads, chunks</text>
+    <text class="tiny" x="640" y="447">parallel reduction</text>
+    <text class="tiny" x="640" y="464">CPU machine code</text>
+
+    <rect class="orange" x="950" y="370" width="280" height="110" rx="10"/>
+    <text class="label" x="1090" y="401">Inductor vendor path</text>
+    <text class="tiny" x="1090" y="426">target code generator</text>
+    <text class="tiny" x="1090" y="447">external kernel or library</text>
+    <text class="tiny" x="1090" y="464">explicit capability result</text>
+  </g>
+
+  <path class="branch" d="M190 480V514H1090M640 480V514M1090 480V514"/>
+  <path class="flow" d="M245 514V536"/>
+
+  <g>
+    <rect class="teal" x="80" y="536" width="330" height="96" rx="10"/>
+    <text class="label" x="245" y="567">Runtime launch</text>
+    <text class="tiny" x="245" y="591">module or library + workspace</text>
+    <text class="tiny" x="245" y="611">arguments + framework stream</text>
+
+    <rect class="teal" x="475" y="536" width="330" height="96" rx="10"/>
+    <text class="label" x="640" y="567">Profiler correlation</text>
+    <text class="tiny" x="640" y="591">Python region to FX nodes</text>
+    <text class="tiny" x="640" y="611">generated work to device launch</text>
+
+    <rect class="orange" x="870" y="536" width="330" height="96" rx="10"/>
+    <text class="label" x="1035" y="567">Eager / reference check</text>
+    <text class="tiny" x="1035" y="591">dtype-specific tolerance</text>
+    <text class="tiny" x="1035" y="611">fallback and host-transfer accounting</text>
+  </g>
+
+  <path class="flow" d="M410 584H475"/>
+  <path class="flow" d="M805 584H870"/>
+
+  <rect class="pale" x="150" y="681" width="980" height="58" rx="10"/>
+  <text class="title" x="640" y="707" font-size="14">VALIDATION RESULT</text>
+  <text class="small" x="640" y="727">artifact guards · launch identity · numerical check · fallback record</text>
+  <path class="flow" d="M1035 632V661H640V681"/>
+</svg>

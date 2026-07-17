@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" font-family="'Space Grotesk','Inter',sans-serif">
+  <defs>
+    <style>
+      .title{fill:#36535b;text-anchor:middle;font-size:19px;font-weight:700}
+      .row{fill:#36535b;text-anchor:middle;font-size:12px;font-weight:700;letter-spacing:.5px}
+      .head{fill:#173d49;stroke:#42bda8;stroke-width:2}
+      .headText{fill:#f6fffd;text-anchor:middle;font-size:17px;font-weight:700}
+      .user{fill:#173d49;stroke:#42bda8;stroke-width:2}
+      .ir{fill:#e7f6f3;stroke:#42bda8;stroke-width:2}
+      .edge{fill:#fff3eb;stroke:#e68a57;stroke-width:2}
+      .lower{fill:#e9f1f1;stroke:#718d92;stroke-width:1.5}
+      .light{fill:#f6fffd;text-anchor:middle;font-size:14px;font-weight:600}
+      .dark{fill:#284951;text-anchor:middle;font-size:14px;font-weight:600}
+      .small{fill:#36535b;text-anchor:middle;font-size:12px}
+      .line{fill:none;stroke:#718d92;stroke-width:2.5;stroke-linecap:round}
+    </style>
+  </defs>
+  <rect width="1280" height="720" rx="20" fill="#f5faf9"/>
+  <text class="title" x="640" y="34">WHERE EACH FRAMEWORK MEETS THE DEVICE</text>
+
+  <text class="row" x="82" y="103">FRAMEWORK</text>
+  <rect class="head" x="160" y="66" width="320" height="55" rx="10"/>
+  <text class="headText" x="320" y="100">PYTORCH</text>
+  <rect class="head" x="500" y="66" width="320" height="55" rx="10"/>
+  <text class="headText" x="660" y="100">JAX</text>
+  <rect class="head" x="840" y="66" width="320" height="55" rx="10"/>
+  <text class="headText" x="1000" y="100">MAX</text>
+
+  <text class="row" x="82" y="183">USER MODEL</text>
+  <rect class="user" x="160" y="142" width="320" height="82" rx="10"/>
+  <text class="light" x="320" y="176">eager tensors and autograd</text>
+  <text class="light" x="320" y="199">torch.compile</text>
+  <rect class="user" x="500" y="142" width="320" height="82" rx="10"/>
+  <text class="light" x="660" y="176">array programs and transformations</text>
+  <text class="light" x="660" y="199">jit · grad · vmap · sharding</text>
+  <rect class="user" x="840" y="142" width="320" height="82" rx="10"/>
+  <text class="light" x="1000" y="176">model modules and inference graphs</text>
+  <text class="light" x="1000" y="199">pipelines · batching · serving</text>
+
+  <g class="line">
+    <path d="M320 224V263"/>
+    <path d="M660 224V263"/>
+    <path d="M1000 224V263"/>
+  </g>
+
+  <text class="row" x="82" y="316">SEMANTICS</text>
+  <text class="row" x="82" y="333">AND IR</text>
+  <rect class="ir" x="160" y="263" width="320" height="108" rx="10"/>
+  <text class="dark" x="320" y="303">ATen · dispatcher · fake tensors</text>
+  <text class="dark" x="320" y="327">FX · AOTAutograd · Inductor</text>
+  <text class="small" x="320" y="351">several framework integration points</text>
+  <rect class="ir" x="500" y="263" width="320" height="108" rx="10"/>
+  <text class="dark" x="660" y="303">jaxpr transformations</text>
+  <text class="dark" x="660" y="327">StableHLO lowering</text>
+  <text class="small" x="660" y="351">functional program before target lowering</text>
+  <rect class="ir" x="840" y="263" width="320" height="108" rx="10"/>
+  <text class="dark" x="1000" y="303">MAX Graph and compiler</text>
+  <text class="dark" x="1000" y="327">Mojo custom operations</text>
+  <text class="small" x="1000" y="351">compiler-visible inference extensions</text>
+
+  <g class="line">
+    <path d="M320 371V410"/>
+    <path d="M660 371V410"/>
+    <path d="M1000 371V410"/>
+  </g>
+
+  <text class="row" x="82" y="458">DEVICE</text>
+  <text class="row" x="82" y="475">BOUNDARY</text>
+  <rect class="edge" x="160" y="410" width="320" height="105" rx="10"/>
+  <text class="dark" x="320" y="450">device hooks · native kernels</text>
+  <text class="dark" x="320" y="474">runtime and compiler backends</text>
+  <text class="small" x="320" y="497">coverage spans multiple subsystems</text>
+  <rect class="edge" x="500" y="410" width="320" height="105" rx="10"/>
+  <text class="dark" x="660" y="450">target compiler</text>
+  <text class="dark" x="660" y="474">PJRT plugin</text>
+  <text class="small" x="660" y="497">compile, buffers, devices, execute, futures</text>
+  <rect class="edge" x="840" y="410" width="320" height="105" rx="10"/>
+  <text class="dark" x="1000" y="448">supported MAX device backends</text>
+  <text class="dark" x="1000" y="472">Mojo custom operations</text>
+  <text class="small" x="1000" y="496">no public third-party backend API in 26.4</text>
+
+  <g class="line">
+    <path d="M320 515V542"/>
+    <path d="M660 515V542"/>
+    <path d="M1000 515V542"/>
+    <path d="M255 542H1070"/>
+    <path d="M255 542V568"/>
+    <path d="M460 542V568"/>
+    <path d="M665 542V568"/>
+    <path d="M870 542V568"/>
+    <path d="M1070 542V568"/>
+  </g>
+
+  <text class="row" x="82" y="616">COMMON</text>
+  <text class="row" x="82" y="633">LOWER STACK</text>
+  <rect class="lower" x="160" y="568" width="190" height="82" rx="10"/>
+  <text class="dark" x="255" y="602">driver · firmware</text>
+  <text class="dark" x="255" y="625">memory · queues</text>
+  <rect class="lower" x="365" y="568" width="190" height="82" rx="10"/>
+  <text class="dark" x="460" y="602">compiler · codegen</text>
+  <text class="dark" x="460" y="625">artifact loading</text>
+  <rect class="lower" x="570" y="568" width="190" height="82" rx="10"/>
+  <text class="dark" x="665" y="602">kernels · libraries</text>
+  <text class="dark" x="665" y="625">numerical modes</text>
+  <rect class="lower" x="775" y="568" width="190" height="82" rx="10"/>
+  <text class="dark" x="870" y="602">topology · collectives</text>
+  <text class="dark" x="870" y="625">failure handling</text>
+  <rect class="lower" x="980" y="568" width="180" height="82" rx="10"/>
+  <text class="dark" x="1070" y="602">tools · packaging</text>
+  <text class="dark" x="1070" y="625">qualification</text>
+
+  <text class="small" x="660" y="689">Each boundary assigns compiler, runtime, kernel, and device work to a different owner.</text>
+</svg>

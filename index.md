@@ -8,6 +8,8 @@ header:
   actions:
     - label: "Read the Agentic Engineering series"
       url: /agentic-engineering/
+    - label: "Read the Accelerator Support series"
+      url: /accelerator-support/
     - label: "Read the Ignis series"
       url: /ignis/
     - label: "Read the ASR series"
@@ -18,6 +20,13 @@ feature_row:
     title: "The Future of Agentic Engineering"
     excerpt: "A five-part series on where software work heads as coding agents become a daily tool. From eighteen years building software and nine across the AI stack: the durable principles that stay fixed, the methods that become executable loops, and the human shift from writing code to **steering, verifying, and owning** systems of agents."
     url: /agentic-engineering/
+    btn_label: "Read the series"
+    btn_class: "btn--primary"
+  - image_path: /assets/images/accelerator/hero-accelerator.svg
+    alt: "Building Software Support for a New AI Accelerator"
+    title: "Building Software Support for a New AI Accelerator"
+    excerpt: "Eleven parts follow a new accelerator from hardware and drivers through PyTorch tensors, kernels, graph compilation, distributed execution, workload runtimes, qualification, and release, then compare the integration boundaries in JAX, MAX, CUDA, ROCm, and Intel XPU."
+    url: /accelerator-support/
     btn_label: "Read the series"
     btn_class: "btn--primary"
   - image_path: /assets/images/hero-mojo.svg

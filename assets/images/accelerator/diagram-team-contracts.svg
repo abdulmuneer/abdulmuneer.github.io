@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620" font-family="'Space Grotesk','Inter',sans-serif">
+  <defs><style>.t{fill:#f4fffc;text-anchor:middle;font-weight:600;font-size:14}.n{fill:#304d56;text-anchor:middle;font-size:13}.e{fill:none;stroke:#79a9a5;stroke-width:2.5}.a{fill:#173d49;stroke:#3abca6;stroke-width:2}.b{fill:#69412f;stroke:#e68a57;stroke-width:2}</style></defs><rect width="1200" height="620" rx="20" fill="#f5faf9"/>
+  <g class="e"><path d="M600 310L600 92M600 310L875 145M600 310L980 310M600 310L875 475M600 310L600 528M600 310L325 475M600 310L220 310M600 310L325 145"/></g>
+  <circle cx="600" cy="310" r="106" fill="#0e2934" stroke="#ff9b63" stroke-width="4"/><text class="t" x="600" y="296" font-size="18">SHARED</text><text class="t" x="600" y="320" font-size="18">CONTRACTS</text><text class="t" x="600" y="344" font-size="18">AND TESTS</text>
+  <g><rect class="b" x="480" y="45" width="240" height="64" rx="12"/><text class="t" x="600" y="73">Chip, package, process</text><text class="t" x="600" y="94">power and thermal</text>
+    <rect class="a" x="780" y="102" width="235" height="64" rx="12"/><text class="t" x="897" y="130">Firmware and drivers</text><text class="t" x="897" y="151">security and RAS</text>
+    <rect class="a" x="935" y="278" width="235" height="64" rx="12"/><text class="t" x="1052" y="306">Runtime and memory</text><text class="t" x="1052" y="327">queues and profiling</text>
+    <rect class="a" x="780" y="454" width="235" height="64" rx="12"/><text class="t" x="897" y="482">Kernels and compiler</text><text class="t" x="897" y="503">legality and cost</text>
+    <rect class="a" x="480" y="511" width="240" height="64" rx="12"/><text class="t" x="600" y="539">Framework and domain</text><text class="t" x="600" y="560">user semantics</text>
+    <rect class="a" x="185" y="454" width="235" height="64" rx="12"/><text class="t" x="302" y="482">Collectives and network</text><text class="t" x="302" y="503">topology and failure</text>
+    <rect class="b" x="30" y="278" width="235" height="64" rx="12"/><text class="t" x="147" y="306">Validation and release</text><text class="t" x="147" y="327">evidence and support</text>
+    <rect class="b" x="185" y="102" width="235" height="64" rx="12"/><text class="t" x="302" y="130">Media and fixed function</text><text class="t" x="302" y="151">formats and interop</text></g>
+  <text class="n" x="600" y="605">Contract tests verify assumptions at each team boundary.</text>
+</svg>

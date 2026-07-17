@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 760" width="1280" height="760" font-family="'Space Grotesk','Inter',sans-serif">
+  <defs>
+    <style>
+      .title{fill:#36535b;text-anchor:middle;font-size:19px;font-weight:700}
+      .head{fill:#173d49;stroke:#42bda8;stroke-width:2}
+      .headText{fill:#f6fffd;text-anchor:middle;font-size:16px;font-weight:700}
+      .label{fill:#36535b;text-anchor:middle;font-size:12px;font-weight:700;letter-spacing:.4px}
+      .box{fill:#e7f6f3;stroke:#42bda8;stroke-width:1.8}
+      .code{fill:#fff3eb;stroke:#e68a57;stroke-width:1.8}
+      .low{fill:#e9f1f1;stroke:#718d92;stroke-width:1.5}
+      .text{fill:#284951;text-anchor:middle;font-size:14px;font-weight:600}
+      .small{fill:#36535b;text-anchor:middle;font-size:12px}
+      .line{fill:none;stroke:#718d92;stroke-width:2.5;stroke-linecap:round}
+    </style>
+  </defs>
+  <rect width="1280" height="760" rx="20" fill="#f5faf9"/>
+  <text class="title" x="640" y="34">CUDA, ROCM, AND INTEL XPU LAYER BY LAYER</text>
+
+  <rect class="head" x="205" y="62" width="310" height="58" rx="10"/>
+  <text class="headText" x="360" y="97">NVIDIA CUDA</text>
+  <rect class="head" x="535" y="62" width="310" height="58" rx="10"/>
+  <text class="headText" x="690" y="97">AMD ROCm</text>
+  <rect class="head" x="865" y="62" width="310" height="58" rx="10"/>
+  <text class="headText" x="1020" y="97">INTEL GPU / XPU</text>
+
+  <text class="label" x="104" y="163">PYTORCH</text>
+  <text class="label" x="104" y="180">SURFACE</text>
+  <rect class="box" x="205" y="140" width="310" height="62" rx="9"/>
+  <text class="text" x="360" y="177">torch.cuda</text>
+  <rect class="box" x="535" y="140" width="310" height="62" rx="9"/>
+  <text class="text" x="690" y="165">torch.cuda surface</text>
+  <text class="small" x="690" y="186">PyTorch built with HIP</text>
+  <rect class="box" x="865" y="140" width="310" height="62" rx="9"/>
+  <text class="text" x="1020" y="177">torch.xpu</text>
+
+  <g class="line"><path d="M360 202V222"/><path d="M690 202V222"/><path d="M1020 202V222"/></g>
+  <text class="label" x="104" y="261">PROGRAMMING</text>
+  <text class="label" x="104" y="278">AND RUNTIME</text>
+  <rect class="box" x="205" y="222" width="310" height="82" rx="9"/>
+  <text class="text" x="360" y="257">CUDA Runtime + Driver API</text>
+  <text class="small" x="360" y="281">contexts · streams · events · memory</text>
+  <rect class="box" x="535" y="222" width="310" height="82" rx="9"/>
+  <text class="text" x="690" y="257">HIP + ROCr / HSA</text>
+  <text class="small" x="690" y="281">queues · signals · events · memory</text>
+  <rect class="box" x="865" y="222" width="310" height="82" rx="9"/>
+  <text class="text" x="1020" y="251">SYCL + Unified Runtime</text>
+  <text class="small" x="1020" y="275">Level Zero device interface</text>
+
+  <g class="line"><path d="M360 304V324"/><path d="M690 304V324"/><path d="M1020 304V324"/></g>
+  <text class="label" x="104" y="369">COMPILER</text>
+  <text class="label" x="104" y="386">ARTIFACT</text>
+  <rect class="code" x="205" y="324" width="310" height="94" rx="9"/>
+  <text class="text" x="360" y="362">NVVM IR · PTX</text>
+  <text class="text" x="360" y="386">cubin / native device code</text>
+  <rect class="code" x="535" y="324" width="310" height="94" rx="9"/>
+  <text class="text" x="690" y="362">LLVM AMDGPU</text>
+  <text class="text" x="690" y="386">per-gfx code objects</text>
+  <rect class="code" x="865" y="324" width="310" height="94" rx="9"/>
+  <text class="text" x="1020" y="362">LLVM · SPIR-V</text>
+  <text class="text" x="1020" y="386">JIT or AOT native device code</text>
+
+  <g class="line"><path d="M360 418V438"/><path d="M690 418V438"/><path d="M1020 418V438"/></g>
+  <text class="label" x="104" y="482">LIBRARIES</text>
+  <text class="label" x="104" y="499">AND COLLECTIVES</text>
+  <rect class="box" x="205" y="438" width="310" height="82" rx="9"/>
+  <text class="text" x="360" y="484">cuBLAS · cuDNN · NCCL</text>
+  <rect class="box" x="535" y="438" width="310" height="82" rx="9"/>
+  <text class="text" x="690" y="484">rocBLAS · MIOpen · RCCL</text>
+  <rect class="box" x="865" y="438" width="310" height="82" rx="9"/>
+  <text class="text" x="1020" y="470">oneMKL · oneDNN</text>
+  <text class="small" x="1020" y="494">PyTorch XCCL backend</text>
+
+  <g class="line"><path d="M360 520V540"/><path d="M690 520V540"/><path d="M1020 520V540"/></g>
+  <text class="label" x="104" y="583">SYSTEM</text>
+  <text class="label" x="104" y="600">AND TOOLS</text>
+  <rect class="low" x="205" y="540" width="310" height="96" rx="9"/>
+  <text class="text" x="360" y="577">NVIDIA kernel driver</text>
+  <text class="small" x="360" y="602">Nsight · CUDA-GDB</text>
+  <rect class="low" x="535" y="540" width="310" height="96" rx="9"/>
+  <text class="text" x="690" y="577">amdgpu + ROCr</text>
+  <text class="small" x="690" y="602">ROCprofiler · ROCgdb</text>
+  <rect class="low" x="865" y="540" width="310" height="96" rx="9"/>
+  <text class="text" x="1020" y="570">xe or i915 + Compute Runtime</text>
+  <text class="small" x="1020" y="598">VTune · Intel GDB</text>
+
+  <rect x="205" y="666" width="970" height="48" rx="9" fill="#173d49"/>
+  <text class="headText" x="690" y="695">Different runtimes · binaries · drivers · libraries · release matrices</text>
+  <text class="small" x="690" y="741">Source, binary, numerical, and performance portability each require separate evidence.</text>
+</svg>

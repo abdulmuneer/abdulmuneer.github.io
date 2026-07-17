@@ -3,6 +3,8 @@ main:
     url: /
   - title: "Agentic Engineering"
     url: /agentic-engineering/
+  - title: "Accelerator Support"
+    url: /accelerator-support/
   - title: "Ignis Series"
     url: /ignis/
   - title: "ASR Series"
@@ -33,6 +35,34 @@ asr:
         url: /asr/
       - title: "Tuning Voice Activity Detection for ASR Gating"
         url: /asr/tuning-vad-for-asr.html
+
+accelerator:
+  - title: "Building Software Support for a New AI Accelerator"
+    children:
+      - title: "Overview"
+        url: /accelerator-support/
+      - title: "Part 1 - The Support Contract"
+        url: /accelerator-support/01-the-support-contract.html
+      - title: "Part 2 - The Hardware-Software Contract"
+        url: /accelerator-support/02-hardware-software-contract.html
+      - title: "Part 3 - Driver, Runtime, and Memory"
+        url: /accelerator-support/03-driver-runtime-memory.html
+      - title: "Part 4 - Tensors, Dispatch, and Operators"
+        url: /accelerator-support/04-tensors-dispatch-operators.html
+      - title: "Part 5 - Kernel Libraries"
+        url: /accelerator-support/05-kernel-libraries.html
+      - title: "Part 6 - The Graph Compiler"
+        url: /accelerator-support/06-graph-compiler.html
+      - title: "Part 7 - Autograd, Precision, and Numerical Validation"
+        url: /accelerator-support/07-autograd-precision-numerics.html
+      - title: "Part 8 - Scale-Up and Scale-Out"
+        url: /accelerator-support/08-distributed-systems.html
+      - title: "Part 9 - Training, Inference, and Media Engines"
+        url: /accelerator-support/09-domain-engines.html
+      - title: "Part 10 - Qualification and Release"
+        url: /accelerator-support/10-productization.html
+      - title: "Part 11 - Framework Boundaries and Vendor Stacks"
+        url: /accelerator-support/11-pytorch-jax-max-vendor-stacks.html
 
 ignis:
   - title: "Ignis - Finding Your Mojo from DwarfStar"
