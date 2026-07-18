@@ -165,6 +165,24 @@ PIPELINE_REGISTRY ─► compiled MAX graph + kernels   (native, on-device)
 
 So the headline needs its qualifier. In-process is accurate: the model runs in the same OS process as the harness, which is what removes the REST hop. Pure Mojo it is not. The path is `Mojo → embedded CPython → MAX's Python API → native kernels`. Mojo is MAX's kernel language; it isn't its orchestration language yet. Removing CPython entirely would need a Mojo-native inference API that doesn't exist, and that sets the ceiling on how Mojo-native a project like this can be right now.
 
+The durable knowledge-search example makes the same boundary visible without a
+model:
+
+```
+knowledge_bridge.mojo   compiled Mojo command boundary
+        │  std.python with an explicit module path
+        ▼
+knowledge_base.py      Python filesystem + SQLite FTS5
+        │
+        └── schema-versioned hits, citations, hashes, source versions, snapshot id
+```
+
+Python owns directory traversal, persistence, and the optional loopback HTTP
+adapter because its standard library already provides them. The Mojo bridge is
+read-only, validates its arguments through the Python API, and returns one
+compact result contract. This is deliberate interoperation, not a claim that
+the database or server is Mojo-native.
+
 ## Where the language has matured
 
 The 1.0 beta is a real language with a coherent type system, and Ignis leans on the parts that carry weight.
@@ -229,11 +247,16 @@ This is the wall my original, bigger port hit, and it's what actually decides wh
 
 **The service ecosystem is young.** HTTP servers, async patterns, JSON Schema validation, database drivers, tracing, provider SDKs - none are at Python parity. A call center treats those as the spine, not extras, which is why my full port stalled and Ignis narrowed to a focused harness.
 
-And here's the tension at the heart of the language today. Python interop is the escape hatch, and leaning on it everywhere quietly gives up the drop-in story. Mojo can import CPython, so you're never fully blocked - the entire model path in Ignis is `std.python` reaching into MAX. But if every missing battery is answered with "call Python," you haven't replaced Python, you've wrapped it. Interop is a migration path and a runtime bridge. It is not a native ecosystem.
+The durable search program made the practical choice explicit. Python's
+standard library handles safe file reads, SQLite, and local HTTP. Mojo handles
+the compiled command boundary and consumes a schema-versioned result. Interop
+does not make those Python facilities Mojo-native, but neither does using them
+erase the value of a typed Mojo control plane. The useful question is which
+side owns each contract, not whether every line can be moved into one language.
 
 ## My verdict on the language
 
-For what I built - a compiled, deterministic control plane running in-process with a model - Mojo at 1.0 beta is ready enough to ship. Traits, generics, ownership, and structs carried the harness. If your problem is a state machine near a model - a parser, a policy gate, an encoder, a tool loop - Mojo is a credible choice today.
+For what I built - a compiled, deterministic control plane running in-process with a model - Mojo at 1.0 beta is ready enough to ship. Traits, generics, ownership, and structs carried the harness. If your problem is a state machine near a model - a parser, a policy gate, an encoder, a tool loop - Mojo is a credible choice today. If the same program needs a database or HTTP server, Python interop is currently the practical boundary; keep that boundary narrow and explicit.
 
 For the original goal - a drop-in replacement for a batteries-included Python application - it isn't ready, and there's no use pretending otherwise. No stdlib JSON, a young service ecosystem, and the constant pull toward interop the moment you leave the happy path. The ecosystem is three years old; that's the explanation, not a design flaw.
 

@@ -35,7 +35,11 @@ That's the experiment that I call Ignis :) .
 
 The bet is a split of ownership:
 
-- **Mojo owns the control plane** - the session timeline, prompt rendering, tool parsing, the policy gate, the append-only event log, telemetry. The deterministic parts, the ones that benefit from being compiled and ownership-checked with no dynamic Python on the hot path.
+- **Mojo owns the typed control plane** - the session timeline, prompt rendering,
+  tool parsing, policy, event log, and telemetry. It does not need to replace
+  mature storage or service libraries to own that boundary. Filesystems,
+  databases, and local HTTP remain suitable Python responsibilities when they
+  are not the compute being optimized.
 - **MAX owns model execution** - graph compilation, the kernels, the KV cache, generated text.
 
 One thing I want to be straight about up front, because it's the easy claim to oversell: "shared runtime" means in-process, not pure Mojo. The real path is `Mojo → embedded CPython → MAX's Python pipeline → native kernels`. MAX deprecated its Mojo-language inference APIs in favour of Python, and the frontier it keeps for Mojo is GPU kernels and custom ops. I'd rather say that here than have you find out three parts in that I've been quietly selling "Mojo-to-MAX, direct." The actually-Mojo-native direction runs the other way - pushing agent decisions *into* the graph as custom ops - and that's a longer game than one side project.

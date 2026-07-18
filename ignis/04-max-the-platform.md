@@ -69,7 +69,7 @@ This is the seam Ignis crosses from Mojo via `std.python`. It's "more in-process
 
 - an OpenAI-compatible REST API serving **500+ Hugging Face models**;
 - graph-compiler optimizations, **quantization**, continuous **batching**, **prefix caching**, and **speculative decoding**;
-- **function calling** and **structured output** - the very feature Ignis rides for the airtight grammar gate below;
+- **function calling** and **structured output** - the feature Ignis uses for the grammar-constrained tool-name gate below;
 - **LoRA adapters**, and custom kernels authored in **Mojo**.
 
 You install it with `pip install modular` (the `max` CLI) or run a sub-1 GB Docker container. The thing to notice: nearly every bullet there is a primitive [Part 2](./02-what-was-achieved.md) found *already built* - which is precisely why the harness's job turned out to be **binding** these primitives together; the hard inference work was already built.
@@ -155,7 +155,7 @@ GATE CLOSED (numpy suppressor)      -> tool = issue_request_for_a_quotation
 GATE CLOSED (gated_logits Mojo op)  -> tool = issue_deferred_payment
 ```
 
-An earlier version got beaten by literally `issue_REFUND_QUOTE` - uppercase tokenizes to different ids. You widen the set; the model finds another synonym. It's a losing game for a principled reason: masking token ids can never enumerate every string that *means* the forbidden thing. So the scorecard for gate one: it proves a Mojo op can author, compile, and execute enforcement as a graph node; it's no speedup (routing a vector add through a graph is slower than host code); and it isn't airtight.
+An earlier version got beaten by literally `issue_REFUND_QUOTE` - uppercase tokenizes to different ids. You widen the set; the model finds another synonym. Masking token ids cannot enumerate every string that *means* the forbidden thing. So the scorecard for gate one: it proves a Mojo op can author, compile, and execute enforcement as a graph node; it's no speedup (routing a vector add through a graph is slower than host code); and it cannot provide complete string-level enforcement.
 
 ### Gate two - riding MAX's own grammar engine
 
@@ -164,15 +164,15 @@ Airtight enforcement is a different mechanism - grammar or FSM-constrained decod
 - gate **closed** → `enum: ["get_order_status"]` → llguidance makes any token path spelling `issue_refund_quote` impossible to produce.
 - gate **open** → `enum: ["get_order_status", "issue_refund_quote"]`.
 
-The decision is still Ignis's (the same `is_confirmation` + order-id binding); MAX enforces it, and the forbidden direction is now airtight (`GRAMMAR_GATE_OK`, on an H100). The synonym evasion is structurally gone. It cost a pile of warts I only found by building it: GPU only (`enable_structured_output` raises on CPU); the bare in-process path needs `max_batch_size=1`; greedy (`top_k=1`) required (sampling can pick a padding token above the grammar's vocab range and abort llguidance); enforcement is guaranteed only up to the policy-critical field (the matcher rejects EOS in a non-accepting state and self-disables for the JSON tail - fine for a name-gating policy, but you have to know it); and it emits raw JSON instead of Qwen's Hermes `<tool_call>` wrap, so it doesn't feed the existing `HermesToolCodec`.
+The decision is still Ignis's (the same `is_confirmation` + order-id binding); MAX enforces it, and the grammar excludes the forbidden tool name (`GRAMMAR_GATE_OK`, on an H100). The synonym evasion is structurally gone. The implementation has constraints I only found by building it: GPU only (`enable_structured_output` raises on CPU); the bare in-process path needs `max_batch_size=1`; greedy (`top_k=1`) required (sampling can pick a padding token above the grammar's vocab range and abort llguidance); enforcement is guaranteed only up to the policy-critical field (the matcher rejects EOS in a non-accepting state and self-disables for the JSON tail - sufficient for a name-gating policy, but important to document); and it emits raw JSON instead of Qwen's Hermes `<tool_call>` wrap, so it doesn't feed the existing `HermesToolCodec`.
 
 ### The answer to peer-or-wrapper
 
 Side by side, the two gates turn the question into something more precise than either word:
 
-> Mojo *is* a real peer in the graph for authoring enforcement - a custom op compiles in and runs inside the live sampler, proven. But airtight constrained decoding is a solved problem MAX already owns, and the honest move is to drive that engine instead of reimplementing it.
+> Mojo *is* a real peer in the graph for authoring enforcement - a custom op compiles in and runs inside the live sampler. MAX already provides grammar-constrained decoding, so Ignis uses that engine instead of reimplementing it.
 
-Mojo is the right tool for small, bespoke decision logic you want compiled next to the model; MAX's grammar engine is the right tool for airtight structural constraints. Neither pure wrapper nor full co-author of the decoder - a peer for the part worth authoring by hand, a disciplined client for the part that isn't.
+Mojo is the right tool for small, bespoke decision logic you want compiled next to the model; MAX's grammar engine is the right tool for structural output constraints. Neither pure wrapper nor full co-author of the decoder - a peer for the part worth authoring by hand, a client of the runtime for the part that isn't.
 
 ## The frontier kept being MAX's - except one thing
 
@@ -193,21 +193,41 @@ SESSION_RESUME_OK kv_warmstart_tokens=1152
 
 A separate process, 1152 tokens of the restored conversation served from disk, the model continuing. It rides the regular `TieredConnector` plus a post-generation flush that works around three real connector bugs (an offload off-by-one for single-batch sessions; an async D2H event not ready when `sync()` checks it; metadata not flushed after `wait_for_writes()`). And the whole thing rests on the render staying byte-identical between save and resume - if the system prompt or formatting drifts, the warm-start vanishes silently, with correct output and lost reuse. Which is why that invariant has model-free CI guarding it.
 
-## The pattern, tested twice more
+## Later results
 
-After that writeup I pushed twice more, and both pushes sharpened the lesson rather than overturning it.
+Later work added retrieval and speculative decoding, and made the runtime boundary more specific.
 
 **In-process RAG: a second pipeline is a one-argument change.** The open risk was that process-global Modular context - the same one that crashes `mojo run`. Would a *second* pipeline collide with the first? It doesn't. `PIPELINE_REGISTRY.retrieve(config, task=PipelineTask.EMBEDDINGS_GENERATION)` loads an embedding model (mpnet, CPU) beside the Qwen3 LLM (GPU) in one process, verified live on an H100 with both generating. One trap worth its own sentence: MAX's pooled embeddings are not unit vectors (`pool_embeddings=True` mean-pools without L2-normalizing; I saw norms of 42/60/30), so Ignis normalizes at the Python boundary, which makes the Mojo-side dot product cosine similarity. And the division of ownership held exactly as the bet predicted: MAX runs both models; Mojo owns the index and the similarity kernel ([Part 3](./03-mojo-the-language.md) shows it). The "one thing MAX leaves alone" turns out to be a whole category: conversation state was the first member, application-side retrieval is the second.
 
+That ownership statement applies to the semantic `rag-live` path. The durable
+`rag_search` program answers a different operational need: restart-persistent
+lexical search over a real document tree. Python's standard library owns its
+filesystem checks, SQLite FTS5 database, and loopback HTTP adapter; a compiled
+Mojo bridge invokes the read-only search contract through `std.python`. MAX is
+not involved. The split follows the work: Mojo implements the typed harness and
+the semantic ranking kernel, while Python supplies storage and service
+facilities that Mojo does not currently provide.
+
 **Speculative decoding: advertised, shipped, and at this scale a measured loss.** The feature list above advertises it, and it's really there: a standalone draft/target mode where Qwen3-0.6B proposes *k* tokens and Qwen3-8B verifies them in one pass. But the path was unwalked enough that three bugs stood between `retrieve()` and a running pipeline: a `Dim + TensorValue` type error in the target's logits graph (already fixed upstream; backported), the draft model being built from the *target's* config (an 8B graph loading 0.6B weights), and the draft's second step arriving one graph input short (a dropped `draft_attention_dispatch_metadata`). All three are patched in-harness and filed in `docs/upstream-findings.md`. Then the honest benchmark - one H100, greedy, three 256-token runs after warm-up: baseline **165.7 tok/s**, spec k=2 **141.6 tok/s**. The arithmetic explains it: a k=2 cycle should cost about 9.7 ms of compute but measures about 15.2 ms - roughly 5.5 ms/cycle of host-side overhead in MAX's spec pipeline - and break-even at k=2 needs about 2.4 accepted tokens per cycle where the real pair delivers 2.15. The synthetic-acceptance ceiling (1.8× at k=5) says the machinery wins where target steps dwarf the fixed overhead - on bigger, slower targets than 8B. So it ships opt-in behind `IGNIS_DRAFT_MODEL`, off by default, with `scripts/bench_speculative.py` for pairs where the math changes.
 
-Two refinements to the lesson, then. The parts MAX leaves alone are the application-side state and compute - conversations, retrieval indexes - and that's where harness Mojo earns its keep. And "already shipped" doesn't mean "already walked": being in-process is what turned three upstream bugs from blockers into findings, and being metric-honest is what turned a speedup feature into a correctly-reported slowdown.
+Two refinements follow. MAX leaves application state and retrieval policy to the
+caller, but that does not imply that Mojo must implement every database or
+service. Mojo is useful where typed control or compiled compute matters; Python
+remains appropriate for mature high-level facilities. Separately, an available
+feature still needs direct measurement: the in-process path exposed three
+speculative-decoding bugs, and the benchmark reported a slowdown for this model
+pair.
 
 ## My verdict on MAX
 
 As an in-process runtime, MAX is further along than its Python-first positioning suggests, and that's the headline: compiled Mojo can already reach into the model's compute today - a custom op runs as a node in the graph, on the live logits, in the decode loop. The obstacle was never that two compiled worlds can't meet. What remains is narrower and specific: the orchestration API is Python. There's no Mojo-native way to load Qwen3 and drive `generate`, so the loop runs from CPython even while a Mojo kernel works inside it. A documented, supported in-process MAX-from-Mojo API would remove the integration traps and the last layer of CPython at once.
 
-The other thing to credit honestly: MAX's instinct to ship the hard inference primitives (paged KV, prefix caching, logits hooks, llguidance grammar, tiered offload, multi-pipeline processes, speculative decoding) means a harness author should reach for them first - measuring before believing - and reserve Mojo for the bespoke edges and the application-level state and compute MAX leaves open: conversations, retrieval indexes, the similarity kernel. I don't read any of that as a shortcoming in MAX. It's the right division of labor, and finding it was half the value of the expedition.
+MAX ships the inference primitives Ignis uses: paged KV, prefix caching, logits
+hooks, llguidance grammar, tiered offload, multiple pipelines, and speculative
+decoding. Ignis uses those implementations directly, measures their behavior,
+and reserves Mojo for typed control and the custom compute it actually owns.
+Persistent filesystem search stays in Python. That division is narrower than
+the all-Mojo design I started with, and it matches the APIs available today.
 
 ---
 
