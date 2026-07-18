@@ -181,11 +181,63 @@ Each example lives under `examples/` with its own README, and they split into tw
 **Extension implementations** - each one is the worked answer to "how do I add a single seam from `docs/extensions.md`?", tagged here with the seam it fills:
 
 - **`banking_agent`** *(policy gate)* - A banking agent that checks balances and transfers funds, with every transfer gated behind an exact confirmation. Binds confirmation to two fields (`from_account:amount`), so confirming a 100 USD transfer can't approve a 999 USD one.
-- **`rag_search`** *(embedder)* - A documentation assistant that searches a knowledge base before it answers. The "swap in real embeddings" step has since shipped in the core: `./ignis rag-live` runs real semantic search with a second in-process MAX pipeline and a Mojo SIMD vector index (see [Part 4](./04-max-the-platform.md)).
+- **`rag_search`** *(retrieval and local service)* - A persistent, model-free
+  document index for real Markdown, reStructuredText, and text trees. It uses
+  SQLite FTS5, atomic and incremental snapshots, stable line citations, and
+  Python and CLI indexing/search interfaces, plus read-only Mojo and
+  authenticated loopback HTTP interfaces. The
+  separate `./ignis rag-live` path remains the semantic example: a second MAX
+  pipeline produces embeddings and Mojo ranks them with a SIMD vector index.
 - **`api_navigator`** *(context tier)* - An API-reference agent that answers signature questions by grepping a raw source tome it could never fit in a prompt - live, the installed `max` package itself. A short skill prompt plus two read-only, validated tools, instrumented so the event log shows what the curated tiers are missing.
 - **`custom_backend`** *(backend)* - Not an agent but a drop-in engine: it runs the whole harness against any OpenAI-compatible endpoint (`max serve`, Ollama, OpenAI). `cached_tokens` reads 0 in this backend because it doesn't parse the server's usage field; a server like `max serve` can surface cache reuse over REST through OpenAI's `usage.prompt_tokens_details.cached_tokens`, but you're at the server's mercy for whether it does, and at OpenAI's coarser accounting. In-process hands you MAX's own page-granular `num_cached_tokens` directly.
 - **`graph_policy_gate`** *(custom op)* - Compiles the refund gate into the model's own decoding as a Mojo custom op, so the forbidden tool can't even be spelled. `gated_logits` compiled into a MAX graph and run inside a live Qwen3's sampler.
-- **`grammar_policy_gate`** *(custom op, airtight)* - Makes the refund tool structurally unreachable by riding MAX's own llguidance grammar engine (GPU-only). Same policy as `graph_policy_gate`, a stronger enforcement layer.
+- **`grammar_policy_gate`** *(grammar constraint)* - Excludes the refund tool from the allowed tool-name grammar by using MAX's llguidance engine (GPU-only). Same policy as `graph_policy_gate`, enforced during decoding.
+
+### Running the durable knowledge search
+
+This path needs neither model weights nor a network. Give it a source directory
+and a private database path:
+
+```bash
+export KB_ROOT=/absolute/path/to/docs
+export KB_DB=/absolute/path/to/private-state/knowledge.sqlite3
+
+pixi run knowledge index --root "$KB_ROOT" --db "$KB_DB"
+pixi run knowledge search --root "$KB_ROOT" --db "$KB_DB" \
+  "rollback recovery" --top-k 5
+pixi run knowledge status --root "$KB_ROOT" --db "$KB_DB" --json
+```
+
+`index` without a path reconciles the whole tree, including deletions. A scoped
+file or directory refresh changes only that existing scope. The indexer hashes
+source bytes, retains unchanged chunks, prepares the candidate corpus before it
+mutates SQLite, and commits documents, FTS rows, and snapshot metadata in one
+transaction. Every search result carries a root-relative `path:start-end`
+citation, source hash and version, chunk id, and the snapshot id read in the
+same transaction. An empty result still identifies the snapshot searched.
+
+The Python `KnowledgeBase` class is the full API. A read-only Mojo client calls
+the same implementation through an explicit module path:
+
+```bash
+pixi run mojo build examples/rag_search/knowledge_bridge.mojo \
+  -o /tmp/ignis-knowledge-bridge
+IGNIS_RAG_PYTHONPATH="$(pwd)/examples/rag_search" \
+  /tmp/ignis-knowledge-bridge "$KB_ROOT" "$KB_DB" "rollback recovery" 5
+```
+
+For a local sidecar, generate `IGNIS_RAG_API_TOKEN` with Python's `secrets`
+module and run `pixi run knowledge serve --root "$KB_ROOT" --db "$KB_DB"`.
+The server refuses non-loopback binds and exposes only health, readiness,
+status, and search. It has bounded bodies, results, connections, workers, and
+timeouts. It is a single-user local service, not an internet-facing server.
+
+The filesystem reader rejects outside-root scopes and symlink components,
+accepts strict UTF-8 only, and enforces file, corpus, query, and result limits.
+The SQLite database contains plaintext source chunks. Keep it in a private
+directory and use SQLite's online backup API rather than copying a live WAL
+database file. The example README documents permissions, restore, corruption
+rebuild, and the exact failure contract.
 
 
 ## Building Ignis from source
@@ -206,6 +258,7 @@ VIRTUAL_ENV=/path/.venv PATH=/path/.venv/bin:$PATH ./ignis retail-live
 make deps            # git-clone EmberJSON into third_party/ (or: pixi install)
 make build           # compile ./ignis
 make test            # deterministic CI: ToolCodec + VectorIndex self-tests + behavioral eval (no model)
+make examples-test   # runnable banking, remote-backend, and durable retrieval contracts
 make eval            # behavioral eval suite only (no model)  ==  ./ignis eval
 make retail-fixture  # retail scenario via FixtureBackend (no model)
 make coding-fixture  # coding scenario via FixtureBackend (no model)
